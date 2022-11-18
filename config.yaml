@@ -4,6 +4,10 @@ credentials:
       email: ksood@cboevest.com
       name: Karan Sood
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    spaloka@cboevest.com:
+      email: spaloka@cboevest.com
+      name: Sofia Paloka
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
 cookie:
   expiry_days: 30
   key: _vest_abcdef
