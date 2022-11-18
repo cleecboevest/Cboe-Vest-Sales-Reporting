@@ -1,0 +1,13 @@
+credentials:
+  usernames:
+    ksood@cboevest.com:
+      email: ksood@cboevest.com
+      name: Karan Sood
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+cookie:
+  expiry_days: 30
+  key: _vest_abcdef
+  name: sales_dashboard
+preauthorized:
+  emails:
+  - jchang@cboevest.com
