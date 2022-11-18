@@ -2,7 +2,6 @@ from pathlib import Path
 import yaml
 from yaml import SafeLoader
 
-
 import streamlit as st
 import streamlit_authenticator as stauth
 import pandas as pd
@@ -64,6 +63,9 @@ authenticator = stauth.Authenticate(
 )
 
 name, authentication_status, username = authenticator.login("Login", "main")
+
+if 'authentication_status' not in st.session_state:
+     st.session_state['authentication_status'] = authentication_status
 
 if authentication_status == False:
      st.error("Username or password is incorrect.")
