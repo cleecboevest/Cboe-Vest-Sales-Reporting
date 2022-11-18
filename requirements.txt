@@ -2,3 +2,4 @@ streamlit
 streamlit-aggrid
 openpyxl
 streamlit-authenticator
+pyyaml
