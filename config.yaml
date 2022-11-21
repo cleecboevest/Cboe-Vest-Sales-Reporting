@@ -8,6 +8,26 @@ credentials:
       email: spaloka@cboevest.com
       name: Sofia Paloka
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    cmortimer@cboevest.com:
+      email: cmortimer@cboevest.com
+      name: Christopher Mortimer
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    jchang@cboevest.com:
+      email: jchang@cboevest.com
+      name: Jeff Chang
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    mcapizzi@cboevest.com:
+      email: mcapizzi@cboevest.com
+      name: Michael Capizzi
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    dsullivan@cboevest.com:
+      email: dsullivan@cboevest.com
+      name: Dan Sullivan
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    lpoggi@cboevest.com:
+      email: lpoggi@cboevest.com
+      name: Luke Poggi
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
 cookie:
   expiry_days: 30
   key: _vest_abcdef
@@ -15,3 +35,7 @@ cookie:
 preauthorized:
   emails:
   - jchang@cboevest.com
+  - cmortimer@cboevest.com
+  - mcapizzi@cboevest.com
+  - lpoggi@cboevest.com
+  - dsullivan@cboevest.com

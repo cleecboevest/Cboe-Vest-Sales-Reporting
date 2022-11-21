@@ -61,15 +61,9 @@ authenticator = stauth.Authenticate(
      config['cookie']['expiry_days'],
      config['preauthorized']
 )
-
+     
+   
 name, authentication_status, username = authenticator.login("Login", "main")
-#try:
-#     if authenticator.register_user('Register user', preauthorization=False):
-#          st.success('User registered successfully')
-#except Exception as e:
-#     st.error(e)
-
-
 
 if 'authentication_status' not in st.session_state:
      st.session_state['authentication_status'] = authentication_status
