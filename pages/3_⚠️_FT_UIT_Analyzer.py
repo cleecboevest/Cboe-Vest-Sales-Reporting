@@ -13,7 +13,7 @@ import streamlit_authenticator as stauth
 #-------------- USER AUTHENTICATION ----------
 
 # load config file
-file_path = Path(__file__).parent / "config.yaml"
+file_path = Path(__file__).parent / "../config.yaml"
 with file_path.open("rb") as file:
      config = yaml.load(file, Loader=SafeLoader)
 

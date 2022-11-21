@@ -63,6 +63,13 @@ authenticator = stauth.Authenticate(
 )
 
 name, authentication_status, username = authenticator.login("Login", "main")
+#try:
+#     if authenticator.register_user('Register user', preauthorization=False):
+#          st.success('User registered successfully')
+#except Exception as e:
+#     st.error(e)
+
+
 
 if 'authentication_status' not in st.session_state:
      st.session_state['authentication_status'] = authentication_status
@@ -113,7 +120,7 @@ if authentication_status == True:
 
 
      # Create tabs that will be based on each wholesaler
-     firm, capizzi, mortimer, poggi, sullivan = st.tabs(['Firm', 'Capizzi', 'Mortimer', 'Sullivan', 'Poggi'])
+     firm, capizzi, mortimer, poggi, sullivan = st.tabs(['Firm', 'Capizzi', 'Mortimer', 'Poggi', 'Sullivan'])
 
      # Firm Wide Tab
      with firm:
@@ -191,52 +198,12 @@ if authentication_status == True:
      # Morti Tab     
      with mortimer:
           # Create the headers
-          st.header("Capizzi Summary")
+          st.header("Mortimer Summary")
           col1, col2 = st.columns(2)
           
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_df3_master[selected_date_df3_master['Wholesaler'].str.contains('Mortimer', na=False)]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_df3_master[selected_prev_date_df3_master['Wholesaler'].str.contains('Mortimer', na=False)]
-          selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
-          selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
-          change_in_AUM = selected_date_AUM - selected_prev_date_AUM
-          col1.metric("Total Mutual Funds AUM", format_dollar_amount(selected_date_AUM), format_dollar_amount(change_in_AUM))
-          col1.caption('Month Over Month Change')
-          
-          # Net New Assets Calculations
-          selected_date_NNA = selected_date_df3_master_by_wholesaler[selected_date_df3_master_by_wholesaler['NNA'].notnull()]
-          selected_prev_date_NNA = selected_prev_date_df3_master_by_wholesaler[selected_prev_date_df3_master_by_wholesaler['NNA'].notnull()]
-          change_in_NNA = selected_date_NNA['NNA'].sum() - selected_prev_date_NNA['NNA'].sum()
-          col2.metric("Total Mutual Funds NNA", format_dollar_amount(selected_date_NNA['NNA'].sum()), format_dollar_amount(change_in_NNA))
-          col2.caption("Month Over Month Change")
-          
-          st.subheader('Top 20 Clients')
-          AgGrid(selected_date_df3_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                                       'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                                       'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
-               width='100%')
-          
-          st.subheader('Top 10 Inflows')
-          AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                   'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                   'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
-               width='100%')
-          
-          st.subheader('Top 10 Outflows')
-          AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                   'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                   'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
-               width='100%')
-          
-     # Sullivan Tab     
-     with sullivan:
-          # Create the headers
-          st.header("Sullivan Summary")
-          col1, col2 = st.columns(2)
-          
-          # Filtered Wholesaler to calculate the AUM
-          selected_date_df3_master_by_wholesaler = selected_date_df3_master[selected_date_df3_master['Wholesaler'].str.contains('Sullivan', na=False)]
-          selected_prev_date_df3_master_by_wholesaler = selected_prev_date_df3_master[selected_prev_date_df3_master['Wholesaler'].str.contains('Sullivan', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
           change_in_AUM = selected_date_AUM - selected_prev_date_AUM
@@ -277,6 +244,46 @@ if authentication_status == True:
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_df3_master[selected_date_df3_master['Wholesaler'].str.contains('Poggi', na=False)]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_df3_master[selected_prev_date_df3_master['Wholesaler'].str.contains('Poggi', na=False)]
+          selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
+          selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
+          change_in_AUM = selected_date_AUM - selected_prev_date_AUM
+          col1.metric("Total Mutual Funds AUM", format_dollar_amount(selected_date_AUM), format_dollar_amount(change_in_AUM))
+          col1.caption('Month Over Month Change')
+          
+          # Net New Assets Calculations
+          selected_date_NNA = selected_date_df3_master_by_wholesaler[selected_date_df3_master_by_wholesaler['NNA'].notnull()]
+          selected_prev_date_NNA = selected_prev_date_df3_master_by_wholesaler[selected_prev_date_df3_master_by_wholesaler['NNA'].notnull()]
+          change_in_NNA = selected_date_NNA['NNA'].sum() - selected_prev_date_NNA['NNA'].sum()
+          col2.metric("Total Mutual Funds NNA", format_dollar_amount(selected_date_NNA['NNA'].sum()), format_dollar_amount(change_in_NNA))
+          col2.caption("Month Over Month Change")
+          
+          st.subheader('Top 20 Clients')
+          AgGrid(selected_date_df3_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                       'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                       'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
+               width='100%')
+          
+          st.subheader('Top 10 Inflows')
+          AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                   'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                   'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
+               width='100%')
+          
+          st.subheader('Top 10 Outflows')
+          AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                   'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                   'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
+               width='100%')
+          
+     # Sullivan Tab     
+     with sullivan:
+          # Create the headers
+          st.header("Sullivan Summary")
+          col1, col2 = st.columns(2)
+          
+          # Filtered Wholesaler to calculate the AUM
+          selected_date_df3_master_by_wholesaler = selected_date_df3_master[selected_date_df3_master['Wholesaler'].str.contains('Sullivan', na=False)]
+          selected_prev_date_df3_master_by_wholesaler = selected_prev_date_df3_master[selected_prev_date_df3_master['Wholesaler'].str.contains('Sullivan', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
           change_in_AUM = selected_date_AUM - selected_prev_date_AUM
