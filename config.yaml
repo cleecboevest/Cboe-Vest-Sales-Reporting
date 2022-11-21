@@ -28,6 +28,10 @@ credentials:
       email: lpoggi@cboevest.com
       name: Luke Poggi
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    clee@cboevest.com:
+      email: clee@cboevest.com
+      name: Chris Lee
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
 cookie:
   expiry_days: 30
   key: _vest_abcdef
