@@ -37,6 +37,12 @@ def load_etf_data(url):
      df_etf_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
      return df_etf_master
 
+#---------- SETTINGS ----------
+page_title = "FT Sales Intelligence"
+page_icon = ":money_with_wings:"
+layout = "wide"
+st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
+
 #-------------- USER AUTHENTICATION ----------
 
 # load config file
