@@ -81,9 +81,9 @@ if authentication_status == True:
      
      etf_ticker_options = df_etf_master_merged['Ticker'].sort_values().unique().tolist()
      date_options = df_etf_master_merged['Date'].dt.strftime('%m-%Y').unique().tolist()
-     sp_wholesaler_options = df_etf_master_merged['SP Outsider'].unique().tolist()
-     etf_wholesaler_options = df_etf_master_merged['ETF Outsider'].unique().tolist()
-     uit_wholesaler_options = df_etf_master_merged['COM Outsider'].unique().tolist()
+     sp_wholesaler_options = df_etf_master_merged['SP Outsider'].sort_values().unique().tolist()
+     etf_wholesaler_options = df_etf_master_merged['ETF Outsider'].sort_values().unique().tolist()
+     uit_wholesaler_options = df_etf_master_merged['COM Outsider'].sort_values().unique().tolist()
      
      etf_df_headers = ['Account','Sub Acct Name','Office Address','City','State','Zip','Ticker','AUM','SP Outsider','ETF Outsider','COM Outsider']
      
