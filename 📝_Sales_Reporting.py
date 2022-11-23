@@ -13,33 +13,12 @@ def format_dollar_amount(amount):
         return f'-{formatted_absolute_amount}'
     return formatted_absolute_amount
 
-@st.cache
-def load_mf_data(url):
-     #----------READ IN DATA--------
-     # Read in the Broadridge Data
-     df_mf_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
-     return df_mf_master
-
-@st.cache
-def load_vest_wholesaler_data(url):
-     #----------READ IN DATA--------
-     # Read in the Cboe Vest Wholesaler Territory Data
-     df_vest_wholesalers = pd.read_excel(url,engine='openpyxl',skiprows=0)
-     return df_vest_wholesalers
-
 @st.cache     
-def load_etf_data(url):
-     #----------READ IN DATA--------
-     # Read in the FT ETF Sales Data
-     df_etf_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
-     return df_etf_master
-
-@st.cache     
-def load_uit_data(url):
+def load_data(url):
      #----------READ IN DATA--------
      # Read in the FT UIT Sales Data
-     df_uit_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
-     return df_uit_master
+     df = pd.read_excel(url,engine='openpyxl',skiprows=0)
+     return df
 
 #---------- SETTINGS ----------
 page_title = "Sales Dashboard"
@@ -83,10 +62,10 @@ if authentication_status == True:
      
      #----------STATUS MESSAGE------
      with st.spinner('Loading All Sales Data. This May Take A Minute. Please wait...'):
-          df_mf_master = load_mf_data(st.secrets['broadridge_url'])
-          df_etf_master = load_etf_data(st.secrets['etf_sales_url'])
-          df_uit_master = load_uit_data(st.secrets['uit_sales_url'])
-          df_vest_wholesalers = load_vest_wholesaler_data(st.secrets['vest_wholesaler_url'])
+          df_mf_master = load_data(st.secrets['broadridge_url'])
+          df_etf_master = load_data(st.secrets['etf_sales_url'])
+          df_uit_master = load_data(st.secrets['uit_sales_url'])
+          df_vest_wholesalers = load_data(st.secrets['vest_wholesaler_url'])
 
      # Load in the data and perform operations on the Dataframe
      # Merged Master_Table and Sheet1 into df3

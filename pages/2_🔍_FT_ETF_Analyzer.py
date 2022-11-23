@@ -16,26 +16,12 @@ def format_dollar_amount(amount):
         return f'-{formatted_absolute_amount}'
     return formatted_absolute_amount
 
-@st.cache
-def load_vest_wholesaler_data(url):
-     #----------READ IN DATA--------
-     # Read in the Cboe Vest Wholesaler Territory Data
-     df_vest_wholesalers = pd.read_excel(url,engine='openpyxl',skiprows=0)
-     return df_vest_wholesalers
-
-@st.cache
-def load_ft_wholesaler_data(url):
-     #----------READ IN DATA--------
-     # Read in the Cboe Vest Wholesaler Territory Data
-     df_ft_wholesalers = pd.read_excel(url,engine='openpyxl',skiprows=0)
-     return df_ft_wholesalers
-
 @st.cache     
-def load_etf_data(url):
+def load_data(url):
      #----------READ IN DATA--------
      # Read in the FT ETF Sales Data
-     df_etf_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
-     return df_etf_master
+     df = pd.read_excel(url,engine='openpyxl',skiprows=0)
+     return df
 
 #-------------- USER AUTHENTICATION ----------
 
@@ -71,10 +57,14 @@ if authentication_status == True:
      
      #----------STATUS MESSAGE------
      with st.spinner('Loading All Sales Data. This May Take A Minute. Please wait...'):
-          df_etf_master = load_etf_data(st.secrets['etf_sales_url'])
-          df_ft_wholesalers = load_vest_wholesaler_data(st.secrets['ft_wholesaler_url'])
-          
-     df_etf_master_merged = df_etf_master.merge(df_ft_wholesalers, left_on=['Zip'], right_on=['Zip'], how='left').rename(columns={'City_x':'City','State_x':'State'})
+          df_etf_master = load_data(st.secrets['etf_sales_url'])
+          df_ft_wholesalers = load_data(st.secrets['ft_wholesaler_url'])
+          df_vest_wholesalers = load_data(st.secrets['vest_wholesaler_url'])
+     
+     # Merge all FT and Vest Wholesalers together     
+     df_wholesaler_merged = df_ft_wholesalers.merge(df_vest_wholesalers,left_on='State',right_on='State',how='left')
+     # Then merge all wholesalers list with the ETF data to create a master table by clients and wholesalers
+     df_etf_master_merged = df_etf_master.merge(df_wholesaler_merged, left_on=['Zip'], right_on=['Zip'], how='left').rename(columns={'City_x':'City','State_x':'State'})
      
      df_buffer_etf_master_merged = df_etf_master_merged[df_etf_master_merged['Ticker'].isin(st.secrets['buffer_etf_tickers'])]
      df_target_income_etf_master_merged = df_etf_master_merged[df_etf_master_merged['Ticker'].isin(st.secrets['target_income_etf_tickers'])]
@@ -84,39 +74,52 @@ if authentication_status == True:
      sp_wholesaler_options = df_etf_master_merged['SP Outsider'].sort_values().unique().tolist()
      etf_wholesaler_options = df_etf_master_merged['ETF Outsider'].sort_values().unique().tolist()
      uit_wholesaler_options = df_etf_master_merged['COM Outsider'].sort_values().unique().tolist()
+     vest_wholesaler_options = df_vest_wholesalers['Wholesaler'].sort_values().unique().tolist()
      
      etf_df_headers = ['Account','Sub Acct Name','Office Address','City','State','Zip','Ticker','AUM','SP Outsider','ETF Outsider','COM Outsider']
      
      st.subheader("Wholesaler Ranking")
-     with st.expander('SP Wholesaler Ranking'):
-          with st.form('SP Wholesaler Rank Form'):
+     with st.expander('Wholesaler Ranking'):
+          date_select = st.selectbox('Please select the date you want to analyze sales data:', date_options, index=len(date_options)-1, key='wholesaler ranking select')
+          wholesaler_type_select = st.radio("Choose what type of wholesaler you want to rank:", ('Structured','ETF'), help='Select one or the other to show that type of ranking')
+          show_vest_wholesalers = st.checkbox("Filter by Vest Wholesaler",help='Select this box if you want to filter by a certain Vest Wholesaler')
+          if show_vest_wholesalers:
+               vest_wholesaler_select = st.selectbox("Please select the Vest Wholesaler:", vest_wholesaler_options)
+          else:
+               vest_wholesaler_select = False
           
-               date_select = st.selectbox('Please select the date you want to analyze sales data:', date_options, index=len(date_options)-1)
-               #sp_wholesaler_select = st.selectbox('Please Select the External SP Wholesaler:', sp_wholesaler_options)
-               submitted = st.form_submit_button("Submit")
-
-               if submitted:
-                    df_sp_wholesaler_rank = df_buffer_etf_master_merged.where(df_buffer_etf_master_merged['Date'] == date_select).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
-                    df_sp_wholesaler_rank['AUM'] = df_sp_wholesaler_rank['AUM'].apply(lambda x: format_dollar_amount(x))
-                    AgGrid(df_sp_wholesaler_rank)
+          # Submit button and then perform operation on data based on the conditions
+          if st.button("Submit", key='wholesaler ranking button'):
+               if wholesaler_type_select == 'Structured':
+                    if vest_wholesaler_select:
+                         df_sp_wholesaler_rank = df_buffer_etf_master_merged.where((df_buffer_etf_master_merged['Date'] == date_select) & (df_buffer_etf_master_merged['Wholesaler'] == vest_wholesaler_select)).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
+                    else:
+                         df_sp_wholesaler_rank = df_buffer_etf_master_merged.where(df_buffer_etf_master_merged['Date'] == date_select).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
+               else:
+                    if vest_wholesaler_select:
+                         df_sp_wholesaler_rank = df_buffer_etf_master_merged.where((df_buffer_etf_master_merged['Date'] == date_select) & (df_buffer_etf_master_merged['Wholesaler'] == vest_wholesaler_select)).groupby(['ETF Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
+                    else:
+                         df_sp_wholesaler_rank = df_buffer_etf_master_merged.where(df_buffer_etf_master_merged['Date'] == date_select).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
+               
+               df_sp_wholesaler_rank['AUM'] = df_sp_wholesaler_rank['AUM'].apply(lambda x: format_dollar_amount(x))
+               AgGrid(df_sp_wholesaler_rank)
                     
-     with st.expander('ETF Wholesaler Ranking'):
-          with st.form('ETF Wholesaler Rank Form'):
-          
-               date_select = st.selectbox('Please select the date you want to analyze sales data:', date_options, index=len(date_options)-1)
-               #sp_wholesaler_select = st.selectbox('Please Select the External SP Wholesaler:', sp_wholesaler_options)
-               submitted = st.form_submit_button("Submit")
-
-               if submitted:
-                    df_sp_wholesaler_rank = df_target_income_etf_master_merged.where(df_target_income_etf_master_merged['Date'] == date_select).groupby(['ETF Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
-                    df_sp_wholesaler_rank['AUM'] = df_sp_wholesaler_rank['AUM'].apply(lambda x: format_dollar_amount(x))
-                    AgGrid(df_sp_wholesaler_rank)
+     #with st.expander('ETF Wholesaler Ranking'):
+     #     with st.form('ETF Wholesaler Rank Form'):
+     #     
+     #          date_select = st.selectbox('Please select the date you want to analyze sales data:', date_options, index=len(date_options)-1, key='etf wholesaler ranking select')
+     #          submitted = st.form_submit_button("Submit")
+     #
+     #          if submitted:
+     #               df_sp_wholesaler_rank = df_target_income_etf_master_merged.where(df_target_income_etf_master_merged['Date'] == date_select).groupby(['ETF Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
+     #               df_sp_wholesaler_rank['AUM'] = df_sp_wholesaler_rank['AUM'].apply(lambda x: format_dollar_amount(x))
+     #               AgGrid(df_sp_wholesaler_rank)
                     
      st.subheader("Analyze By Ticker")
      with st.expander('Clients By ETF Ticker'):
           with st.form('Clients By ETF Ticker'):
           
-               date_select = st.selectbox('Please select the date you want to analyze sales data:', date_options, index=len(date_options)-1)
+               date_select = st.selectbox('Please select the date you want to analyze sales data:', date_options, index=len(date_options)-1, key='clients by etf')
                #sp_wholesaler_select = st.selectbox('Please Select the External SP Wholesaler:', sp_wholesaler_options)
                etf_ticker_select = st.selectbox('Please select the ticker you want to analyze sales data:', etf_ticker_options)
                submitted = st.form_submit_button("Submit")
@@ -128,7 +131,7 @@ if authentication_status == True:
                     AgGrid(df_clients_by_ticker)
                     
      with st.expander('Clients By ETF Ticker and Wholesaler'):
-          date_select = st.selectbox('Please select the date you want to analyze sales data:', date_options, index=len(date_options)-1)
+          date_select = st.selectbox('Please select the date you want to analyze sales data:', date_options, index=len(date_options)-1, key='clients by etf and wholesaler select')
           etf_ticker_select = st.selectbox('Please select the ticker you want to analyze sales data:', etf_ticker_options)
           
           
@@ -149,7 +152,7 @@ if authentication_status == True:
           #submitted = st.form_submit_button("Submit")
           
 
-          if st.button('Submit'):
+          if st.button('Submit', key='clients by etf and wholesaler button'):
                if st.session_state['sp_wholesaler']:
                     df_by_client_and_wholesaler = df_buffer_etf_master_merged[df_buffer_etf_master_merged['Ticker'].isin([etf_ticker_select])].where((df_buffer_etf_master_merged['Date'] == date_select) & (df_buffer_etf_master_merged['SP Outsider'] == wholesaler_select)).sort_values(by=['AUM'], ascending=False)[etf_df_headers].dropna(how='all')
                else:
