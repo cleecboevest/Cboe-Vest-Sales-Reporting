@@ -16,12 +16,26 @@ def format_dollar_amount(amount):
         return f'-{formatted_absolute_amount}'
     return formatted_absolute_amount
 
+@st.cache
+def load_vest_wholesaler_data(url):
+     #----------READ IN DATA--------
+     # Read in the Cboe Vest Wholesaler Territory Data
+     df_vest_wholesalers = pd.read_excel(url,engine='openpyxl',skiprows=0)
+     return df_vest_wholesalers
+
+@st.cache
+def load_ft_wholesaler_data(url):
+     #----------READ IN DATA--------
+     # Read in the Cboe Vest Wholesaler Territory Data
+     df_ft_wholesalers = pd.read_excel(url,engine='openpyxl',skiprows=0)
+     return df_ft_wholesalers
+
 @st.cache     
-def load_data(url):
+def load_etf_data(url):
      #----------READ IN DATA--------
      # Read in the FT ETF Sales Data
-     df = pd.read_excel(url,engine='openpyxl',skiprows=0)
-     return df
+     df_etf_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
+     return df_etf_master
 
 #-------------- USER AUTHENTICATION ----------
 
@@ -57,9 +71,9 @@ if authentication_status == True:
      
      #----------STATUS MESSAGE------
      with st.spinner('Loading All Sales Data. This May Take A Minute. Please wait...'):
-          df_etf_master = load_data(st.secrets['etf_sales_url'])
-          df_ft_wholesalers = load_data(st.secrets['ft_wholesaler_url'])
-          df_vest_wholesalers = load_data(st.secrets['vest_wholesaler_url'])
+          df_etf_master = load_etf_data(st.secrets['etf_sales_url'])
+          df_ft_wholesalers = load_ft_wholesaler_data(st.secrets['ft_wholesaler_url'])
+          df_vest_wholesalers = load_vest_wholesaler_data(st.secrets['vest_wholesaler_url'])
      
      # Merge all FT and Vest Wholesalers together     
      df_wholesaler_merged = df_ft_wholesalers.merge(df_vest_wholesalers,left_on='State',right_on='State',how='left')
