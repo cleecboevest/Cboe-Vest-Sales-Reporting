@@ -208,8 +208,19 @@ if authentication_status == True:
      
      df_vest_wholesalers, df_mf_master, df_ft_wholesalers = load_data()
      df = process_dataframe(df_vest_wholesalers, df_mf_master, df_ft_wholesalers)
+     
+     # Build and filter the dataframe
+     updated_df = filter_dataframe(df)
+     
+     # Configure the AG-Groid options to better display the data
+     gb = GridOptionsBuilder.from_dataframe(updated_df)
+     gb.configure_pagination(paginationPageSize=100)
+     gridOptions = gb.build()
+     
           
-     output = AgGrid(filter_dataframe(df),
-                     columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
-                     theme=AgGridTheme.ALPINE
-               )
+     output = AgGrid(
+          updated_df,
+          gridOptions=gridOptions,
+          columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
+          theme=AgGridTheme.ALPINE,
+          )
