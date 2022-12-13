@@ -83,7 +83,7 @@ if authentication_status == True:
      
      #----------STATUS MESSAGE------
      with st.spinner('Loading All Sales Data. This May Take A Minute. Please wait...'):
-          df_mf_master = load_mf_data(st.secrets['broadridge_url'])
+          df_mf_master = load_mf_data(st.secrets['mf_sales_url'])
           df_etf_master = load_etf_data(st.secrets['etf_sales_url'])
           df_uit_master = load_uit_data(st.secrets['uit_sales_url'])
           df_vest_wholesalers = load_vest_wholesaler_data(st.secrets['vest_wholesaler_url'])

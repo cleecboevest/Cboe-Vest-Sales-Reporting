@@ -58,7 +58,7 @@ def load_mf_data(url):
 def load_data():
      # Load all the sales data
      df_vest_wholesalers = load_vest_wholesaler_data(st.secrets['vest_wholesaler_url'])
-     df_mf_master = load_mf_data(st.secrets['broadridge_url'])
+     df_mf_master = load_mf_data(st.secrets['mf_analyzer_url'])
      df_ft_wholesalers = load_ft_wholesaler_data(st.secrets['ft_wholesaler_url'])
      
      return df_vest_wholesalers, df_mf_master, df_ft_wholesalers
