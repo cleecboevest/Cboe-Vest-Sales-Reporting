@@ -36,6 +36,10 @@ credentials:
       email: ksullivan@cboevest.com
       name: Kevin Sullivan
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    sneamtz@cboevest.com:
+      email: sneamtz@cboevest.com
+      name: Steve Neamtz
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
 cookie:
   expiry_days: 30
   key: _vest_abcdef
