@@ -91,8 +91,8 @@ if authentication_status == True:
      # Load in the data and perform operations on the Dataframe
      # Merged Master_Table and Sheet1 into df3
      df_mf_master_merged = df_mf_master.merge(df_vest_wholesalers, left_on=['State/Region'], right_on=['State'], how='outer')
-     df_etf_master_merged = df_etf_master.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how='outer')
-     df_uit_master_merged = df_uit_master.merge(df_vest_wholesalers, left_on=['Office State'], right_on=['State'], how='outer')
+     df_etf_master_merged = df_etf_master.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how='left')
+     df_uit_master_merged = df_uit_master.merge(df_vest_wholesalers, left_on=['Office State'], right_on=['State'], how='left')
      date_options = df_mf_master['Month/Year (Asset Date)'].dt.strftime('%m-%Y').unique().tolist()
 
      # Filtered NNA
@@ -174,7 +174,7 @@ if authentication_status == True:
                st.line_chart(df_mf_master_merged.groupby(['Month/Year (Asset Date)'], as_index=False).sum(), x='Month/Year (Asset Date)', y='AUM')
           with mf_bar_col:
                mf_bar_col.subheader("Mutual Fund Assets By Wholesaler")
-               st.bar_chart(df_mf_master_merged.where(df_mf_master_merged['Month/Year (Asset Date)'] == date_select).groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+               st.bar_chart(selected_date_mf_master.groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
           
           etf_line_col, etf_bar_col = st.columns(2)
           
@@ -183,7 +183,9 @@ if authentication_status == True:
                st.line_chart(df_etf_master_merged.groupby(['Date'], as_index=False).sum(), x='Date', y='AUM')
           with etf_bar_col:
                etf_bar_col.subheader("ETF Assets By Wholesaler")
-               st.bar_chart(df_etf_master_merged.where(df_etf_master_merged['Date'] == date_select).groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')          
+               st.bar_chart(selected_date_etf_master.groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+               
+          
 
      # Capizzi Tab     
      with capizzi:

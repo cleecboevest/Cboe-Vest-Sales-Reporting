@@ -3,3 +3,4 @@ streamlit-aggrid
 openpyxl
 streamlit-authenticator
 pyyaml
+xlsxwriter

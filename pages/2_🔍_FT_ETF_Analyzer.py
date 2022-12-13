@@ -112,17 +112,17 @@ if authentication_status == True:
           if st.button("Submit", key='wholesaler ranking button'):
                if wholesaler_type_select == 'Structured':
                     if vest_wholesaler_select:
-                         df_sp_wholesaler_rank = df_buffer_etf_master_merged.where((df_buffer_etf_master_merged['Date'] == date_select) & (df_buffer_etf_master_merged['Wholesaler'] == vest_wholesaler_select)).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
+                         df_wholesaler_rank = df_buffer_etf_master_merged.where((df_buffer_etf_master_merged['Date'] == date_select) & (df_buffer_etf_master_merged['Wholesaler'] == vest_wholesaler_select)).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
                     else:
-                         df_sp_wholesaler_rank = df_buffer_etf_master_merged.where(df_buffer_etf_master_merged['Date'] == date_select).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
+                         df_wholesaler_rank = df_buffer_etf_master_merged.where((df_buffer_etf_master_merged['Date'] == date_select) & (df_buffer_etf_master_merged['Ticker'].isin(st.secrets['buffer_etf_tickers']))).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
                else:
                     if vest_wholesaler_select:
-                         df_sp_wholesaler_rank = df_buffer_etf_master_merged.where((df_buffer_etf_master_merged['Date'] == date_select) & (df_buffer_etf_master_merged['Wholesaler'] == vest_wholesaler_select)).groupby(['ETF Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
-                    else:
-                         df_sp_wholesaler_rank = df_buffer_etf_master_merged.where(df_buffer_etf_master_merged['Date'] == date_select).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
+                         df_wholesaler_rank = df_target_income_etf_master_merged.where((df_target_income_etf_master_merged['Date'] == date_select) & (df_target_income_etf_master_merged['Wholesaler'] == vest_wholesaler_select) & df_target_income_etf_master_merged['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider','Ticker'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False).pivot(index='ETF Outsider',columns='Ticker',values='AUM')
+                    else:     
+                         df_wholesaler_rank = df_target_income_etf_master_merged.where((df_target_income_etf_master_merged['Date'] == date_select) & df_target_income_etf_master_merged['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
                
-               df_sp_wholesaler_rank['AUM'] = df_sp_wholesaler_rank['AUM'].apply(lambda x: format_dollar_amount(x))
-               AgGrid(df_sp_wholesaler_rank)
+               #df_wholesaler_rank['AUM'] = df_wholesaler_rank['AUM'].apply(lambda x: format_dollar_amount(x))
+               df_wholesaler_rank
                     
      #with st.expander('ETF Wholesaler Ranking'):
      #     with st.form('ETF Wholesaler Rank Form'):
