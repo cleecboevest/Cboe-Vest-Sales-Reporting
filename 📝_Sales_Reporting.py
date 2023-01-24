@@ -167,7 +167,7 @@ if authentication_status == True:
           
           st.markdown("""---""")
           
-          mf_line_col, mf_bar_col = st.columns(2)
+          mf_line_col, mf_bar_col, mf_bar_by_ticker = st.columns(3)
           
           with mf_line_col:
                mf_line_col.subheader("Mutual Fund Assets Over Time")
@@ -175,8 +175,11 @@ if authentication_status == True:
           with mf_bar_col:
                mf_bar_col.subheader("Mutual Fund Assets By Wholesaler")
                st.bar_chart(selected_date_mf_master.groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+          with mf_bar_by_ticker:
+               mf_bar_by_ticker.subheader("Mutual Fund Assets By Product")
+               st.bar_chart(selected_date_mf_master.groupby(['Client Defined Category Name'], as_index=False).sum(), x='Client Defined Category Name', y='AUM')
           
-          etf_line_col, etf_bar_col = st.columns(2)
+          etf_line_col, etf_bar_col, etf_bar_by_ticker = st.columns(3)
           
           with etf_line_col:
                etf_line_col.subheader("ETF Assets Over Time")
@@ -184,6 +187,9 @@ if authentication_status == True:
           with etf_bar_col:
                etf_bar_col.subheader("ETF Assets By Wholesaler")
                st.bar_chart(selected_date_etf_master.groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+          with etf_bar_by_ticker:
+               etf_bar_by_ticker.subheader("ETF Assets By Ticker")
+               st.bar_chart(selected_date_etf_master.groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
                
           
 
