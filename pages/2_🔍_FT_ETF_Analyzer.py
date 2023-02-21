@@ -16,21 +16,21 @@ def format_dollar_amount(amount):
         return f'-{formatted_absolute_amount}'
     return formatted_absolute_amount
 
-@st.cache
+@st.cache_data
 def load_vest_wholesaler_data(url):
      #----------READ IN DATA--------
      # Read in the Cboe Vest Wholesaler Territory Data
      df_vest_wholesalers = pd.read_excel(url,engine='openpyxl',skiprows=0)
      return df_vest_wholesalers
 
-@st.cache
+@st.cache_data
 def load_ft_wholesaler_data(url):
      #----------READ IN DATA--------
      # Read in the Cboe Vest Wholesaler Territory Data
      df_ft_wholesalers = pd.read_excel(url,engine='openpyxl',skiprows=0)
      return df_ft_wholesalers
 
-@st.cache     
+@st.cache_data
 def load_etf_data(url):
      #----------READ IN DATA--------
      # Read in the FT ETF Sales Data
