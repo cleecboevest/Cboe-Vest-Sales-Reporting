@@ -1,6 +1,6 @@
 streamlit
 streamlit-aggrid
-openpyxl
+openpyxl==3.1.0
 streamlit-authenticator
 pyyaml
 xlsxwriter
