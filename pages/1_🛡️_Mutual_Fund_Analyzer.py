@@ -33,21 +33,21 @@ def to_excel(df) -> bytes:
      processed_data = output.getvalue()
      return processed_data
 
-@st.cache_data
+@st.cache_data(ttl=21*24*3600)
 def load_vest_wholesaler_data(url):
      #----------READ IN DATA--------
      # Read in the Cboe Vest Wholesaler Territory Data
      df_vest_wholesalers = pd.read_excel(url,engine='openpyxl')
      return df_vest_wholesalers
 
-@st.cache_data
+@st.cache_data(ttl=21*24*3600)
 def load_ft_wholesaler_data(url):
      #----------READ IN DATA--------
      # Read in the Cboe Vest Wholesaler Territory Data
      df_ft_wholesalers = pd.read_excel(url,engine='openpyxl', dtype={'Zip': str})
      return df_ft_wholesalers
 
-@st.cache_data
+@st.cache_data(ttl=21*24*3600)
 def load_mf_data(url):
      #----------READ IN DATA--------
      # Read in the Broadridge Data
@@ -63,7 +63,7 @@ def load_data():
      
      return df_vest_wholesalers, df_mf_master, df_ft_wholesalers
 
-@st.cache_data
+@st.cache_data(ttl=21*24*3600)
 def process_dataframe(df_vest_wholesalers, df_mf_master, df_ft_wholesalers):
      
      # Define the column headers to display
