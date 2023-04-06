@@ -122,7 +122,7 @@ if authentication_status == True:
      # Calculate Total Firm AUM
      selected_date_mf_AUM = selected_date_mf_master['AUM'].sum()
      selected_date_etf_AUM = selected_date_etf_master['AUM'].sum()
-     selected_date_uit_AUM = selected_date_uit_master['Princ Amt'].sum()
+     selected_date_uit_AUM = selected_date_uit_master['AUM'].sum()
      total_firm_aum = selected_date_mf_AUM + selected_date_etf_AUM + selected_date_uit_AUM
 
      # Firm Wide Tab
