@@ -93,7 +93,7 @@ if authentication_status == True:
      df_wholesaler_merged = df_ft_wholesalers.merge(df_vest_wholesalers,left_on='State',right_on='State',how='left')
      # Then merge all wholesalers list with the ETF and UIT data to create a master table by clients and wholesalers
      df_etf_master_merged = df_etf_master.merge(df_wholesaler_merged, left_on=['Zip'], right_on=['Zip'], how='left').rename(columns={'City_x':'City','State_x':'State'})
-     df_uit_master_merged = df_uit_master.merge(df_wholesaler_merged, left_on=['Zip'], right_on=['Zip'], how='left').rename(columns={'City_x':'City','State_x':'State'})
+     df_uit_master_merged = df_uit_master.merge(df_wholesaler_merged, left_on=['Office Zip'], right_on=['Zip'], how='left').rename(columns={'City_x':'City','State_x':'State'})
      
      df_buffer_etf_master_merged = df_etf_master_merged[df_etf_master_merged['Ticker'].isin(st.secrets['buffer_etf_tickers'])]
      df_target_income_etf_master_merged = df_etf_master_merged[df_etf_master_merged['Ticker'].isin(st.secrets['target_income_etf_tickers'])]
