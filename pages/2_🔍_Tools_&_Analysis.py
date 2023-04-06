@@ -205,5 +205,5 @@ if authentication_status == True:
 
                if submitted:
                     df_clients = df_uit_master_merged.where(df_uit_master_merged['Date'] == date_select).sort_values(by=['AUM'], ascending=False)[etf_df_headers].fillna('')
-                    df_clients['AUM'] = df_clients['AUM'].apply(lambda x: format_dollar_amount(x))
+                    #df_clients['AUM'] = df_clients['AUM'].apply(lambda x: format_dollar_amount(x))
                     AgGrid(df_clients)
