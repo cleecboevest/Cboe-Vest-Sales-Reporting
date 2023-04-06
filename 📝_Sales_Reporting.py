@@ -160,7 +160,7 @@ if authentication_status == True:
           
           # Calculate UIT Assets for Firm and display
           #selected_date_uit_AUM = selected_date_uit_master['Princ Amt'].sum()
-          selected_prev_date_uit_AUM = selected_prev_date_uit_master['Princ Amt'].sum()
+          selected_prev_date_uit_AUM = selected_prev_date_uit_master['AUM'].sum()
           change_in_AUM = selected_date_uit_AUM - selected_prev_date_uit_AUM
           uit_firm.metric("Total UIT AUM", format_dollar_amount(selected_date_uit_AUM), format_dollar_amount(change_in_AUM))
           uit_firm.caption("Month Over Month Change")
