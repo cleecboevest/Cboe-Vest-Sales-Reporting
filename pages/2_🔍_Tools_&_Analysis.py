@@ -105,7 +105,7 @@ if authentication_status == True:
      uit_wholesaler_options = df_etf_master_merged['COM Outsider'].sort_values().unique().tolist()
      vest_wholesaler_options = df_vest_wholesalers['Wholesaler'].sort_values().unique().tolist()
      
-     etf_df_headers = ['Account','Sub Acct Name','Office Address','City','State','Zip','Ticker','AUM','SP Outsider','ETF Outsider','COM Outsider']
+     etf_df_headers = ['Account','Sub Acct Name','Office Address','City','State','Zip','Ticker','AUM','SP Outsider','ETF Outsider','COM Outsider','Wholesaler']
      
      st.subheader("Wholesaler Ranking")
      with st.expander('Wholesaler Ranking'):
@@ -192,3 +192,18 @@ if authentication_status == True:
                     df_by_client_and_wholesaler = df_target_income_etf_master_merged[df_target_income_etf_master_merged['Ticker'].isin([etf_ticker_select])].where((df_target_income_etf_master_merged['Date'] == date_select) & (df_target_income_etf_master_merged['SP Outsider'] == wholesaler_select)).sort_values(by=['AUM'], ascending=False)[etf_df_headers].dropna(how='all')
                df_by_client_and_wholesaler['AUM'] = df_by_client_and_wholesaler['AUM'].apply(lambda x: format_dollar_amount(x))
                AgGrid(df_by_client_and_wholesaler)
+     
+     # Analyze UITs by Wholesaler          
+     with st.expander('Clients By UIT'):
+          with st.form('Clients By UIT'):
+          
+               date_select = st.selectbox('Please select the date you want to analyze sales data:', date_options, index=len(date_options)-1, key='clients by uit')
+               #sp_wholesaler_select = st.selectbox('Please Select the External SP Wholesaler:', sp_wholesaler_options)
+               #etf_ticker_select = st.selectbox('Please select the ticker you want to analyze sales data:', etf_ticker_options)
+               submitted = st.form_submit_button("Submit")
+               
+
+               if submitted:
+                    df_clients = df_uit_master_merged.where(df_uit_master_merged['Date'] == date_select).sort_values(by=['AUM'], ascending=False)[etf_df_headers].fillna('')
+                    df_clients['AUM'] = df_clients['AUM'].apply(lambda x: format_dollar_amount(x))
+                    AgGrid(df_clients)
