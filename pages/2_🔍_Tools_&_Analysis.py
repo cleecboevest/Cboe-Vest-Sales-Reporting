@@ -37,6 +37,13 @@ def load_etf_data(url):
      df_etf_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
      return df_etf_master
 
+@st.cache_data(ttl=21*24*3600)
+def load_uit_data(url):
+     #----------READ IN DATA--------
+     # Read in the FT UIT Sales Data
+     df_uit_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
+     return df_uit_master
+
 #---------- SETTINGS ----------
 page_title = "FT Sales Intelligence"
 page_icon = ":money_with_wings:"
@@ -78,13 +85,15 @@ if authentication_status == True:
      #----------STATUS MESSAGE------
      with st.spinner('Loading All Sales Data. This May Take A Minute. Please wait...'):
           df_etf_master = load_etf_data(st.secrets['etf_sales_url'])
+          df_uit_master = load_uit_data(st.secrets['uit_sales_url'])
           df_ft_wholesalers = load_ft_wholesaler_data(st.secrets['ft_wholesaler_url'])
           df_vest_wholesalers = load_vest_wholesaler_data(st.secrets['vest_wholesaler_url'])
      
      # Merge all FT and Vest Wholesalers together     
      df_wholesaler_merged = df_ft_wholesalers.merge(df_vest_wholesalers,left_on='State',right_on='State',how='left')
-     # Then merge all wholesalers list with the ETF data to create a master table by clients and wholesalers
+     # Then merge all wholesalers list with the ETF and UIT data to create a master table by clients and wholesalers
      df_etf_master_merged = df_etf_master.merge(df_wholesaler_merged, left_on=['Zip'], right_on=['Zip'], how='left').rename(columns={'City_x':'City','State_x':'State'})
+     df_uit_master_merged = df_uit_master.merge(df_wholesaler_merged, left_on=['Zip'], right_on=['Zip'], how='left').rename(columns={'City_x':'City','State_x':'State'})
      
      df_buffer_etf_master_merged = df_etf_master_merged[df_etf_master_merged['Ticker'].isin(st.secrets['buffer_etf_tickers'])]
      df_target_income_etf_master_merged = df_etf_master_merged[df_etf_master_merged['Ticker'].isin(st.secrets['target_income_etf_tickers'])]
@@ -101,7 +110,7 @@ if authentication_status == True:
      st.subheader("Wholesaler Ranking")
      with st.expander('Wholesaler Ranking'):
           date_select = st.selectbox('Please select the date you want to analyze sales data:', date_options, index=len(date_options)-1, key='wholesaler ranking select')
-          wholesaler_type_select = st.radio("Choose what type of wholesaler you want to rank:", ('Structured','ETF'), help='Select one or the other to show that type of ranking')
+          wholesaler_type_select = st.radio("Choose what type of wholesaler you want to rank:", ('Structured','ETF','UIT'), help='Select one or the other to show that type of ranking')
           show_vest_wholesalers = st.checkbox("Filter by Vest Wholesaler",help='Select this box if you want to filter by a certain Vest Wholesaler')
           if show_vest_wholesalers:
                vest_wholesaler_select = st.selectbox("Please select the Vest Wholesaler:", vest_wholesaler_options)
@@ -115,12 +124,16 @@ if authentication_status == True:
                          df_wholesaler_rank = df_buffer_etf_master_merged.where((df_buffer_etf_master_merged['Date'] == date_select) & (df_buffer_etf_master_merged['Wholesaler'] == vest_wholesaler_select)).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
                     else:
                          df_wholesaler_rank = df_buffer_etf_master_merged.where((df_buffer_etf_master_merged['Date'] == date_select) & (df_buffer_etf_master_merged['Ticker'].isin(st.secrets['buffer_etf_tickers']))).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
-               else:
+               elif wholesaler_type_select == 'ETF':
                     if vest_wholesaler_select:
                          df_wholesaler_rank = df_target_income_etf_master_merged.where((df_target_income_etf_master_merged['Date'] == date_select) & (df_target_income_etf_master_merged['Wholesaler'] == vest_wholesaler_select) & df_target_income_etf_master_merged['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider','Ticker'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False).pivot(index='ETF Outsider',columns='Ticker',values='AUM')
                     else:     
                          df_wholesaler_rank = df_target_income_etf_master_merged.where((df_target_income_etf_master_merged['Date'] == date_select) & df_target_income_etf_master_merged['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
-               
+               else:
+                    if vest_wholesaler_select:
+                         df_wholesaler_rank = df_uit_master_merged.where((df_uit_master_merged['Date'] == date_select) & (df_uit_master_merged['Wholesaler'] == vest_wholesaler_select)).groupby(['COM Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
+                    else:     
+                         df_wholesaler_rank = df_uit_master_merged.where((df_uit_master_merged['Date'] == date_select)).groupby(['COM Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False)
                #df_wholesaler_rank['AUM'] = df_wholesaler_rank['AUM'].apply(lambda x: format_dollar_amount(x))
                df_wholesaler_rank
                     
