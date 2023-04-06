@@ -191,6 +191,18 @@ if authentication_status == True:
                etf_bar_by_ticker.subheader("ETF Assets By Ticker")
                st.bar_chart(selected_date_etf_master.groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
                
+          uit_line_col, uit_bar_col, uit_bar_by_ticker = st.columns(3)
+          
+          with uit_line_col:
+               uit_line_col.subheader("UIT Assets Over Time")
+               st.line_chart(df_uit_master_merged.groupby(['Date'], as_index=False).sum(), x='Date', y='AUM')
+          with uit_bar_col:
+               uit_bar_col.subheader("UIT Assets By Wholesaler")
+               st.bar_chart(selected_date_uit_master.groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+          with uit_bar_by_ticker:
+               uit_bar_by_ticker.subheader("UIT Assets By Ticker")
+               st.bar_chart(selected_date_uit_master.groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
+               
           
                
           
