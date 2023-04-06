@@ -92,7 +92,7 @@ if authentication_status == True:
      # Merged Master_Table and Sheet1 into df3
      df_mf_master_merged = df_mf_master.merge(df_vest_wholesalers, left_on=['State/Region'], right_on=['State'], how='outer')
      df_etf_master_merged = df_etf_master.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how='left')
-     df_uit_master_merged = df_uit_master.merge(df_vest_wholesalers, left_on=['Office State'], right_on=['State'], how='left')
+     df_uit_master_merged = df_uit_master.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how='left')
      date_options = df_mf_master['Month/Year (Asset Date)'].dt.strftime('%m-%Y').unique().tolist()
 
      # Filtered NNA
