@@ -192,6 +192,8 @@ if authentication_status == True:
                st.bar_chart(selected_date_etf_master.groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
                
           
+               
+          
 
      # Capizzi Tab     
      with capizzi:
