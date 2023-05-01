@@ -212,7 +212,7 @@ if authentication_status == True:
      # Build and filter the dataframe
      updated_df = filter_dataframe(df)
      
-     # Configure the AG-Groid options to better display the data
+     # Configure the AG-Grid options to better display the data
      gb = GridOptionsBuilder.from_dataframe(updated_df)
      gb.configure_pagination(paginationPageSize=100)
      gridOptions = gb.build()
