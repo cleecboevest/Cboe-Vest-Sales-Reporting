@@ -20,7 +20,7 @@ def load_mf_data(url):
      df_mf_master = pd.read_excel(url,sheet_name='Sales Data Merge',engine='openpyxl',skiprows=0)
      return df_mf_master
 
-@st.cache_data(ttl=180*24*3600)
+@st.cache_data(ttl=30*24*3600)
 def load_vest_wholesaler_data(url):
      #----------READ IN DATA--------
      # Read in the Cboe Vest Wholesaler Territory Data
