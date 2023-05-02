@@ -174,10 +174,10 @@ if authentication_status == True:
                st.line_chart(df_mf_master.groupby(['Month/Year (Asset Date)'], as_index=False).sum(), x='Month/Year (Asset Date)', y='AUM')
           with mf_bar_col:
                mf_bar_col.subheader("Mutual Fund Assets By Wholesaler")
-               st.bar_chart(selected_date_mf_master.groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+               st.bar_chart(selected_date_mf_master.select_dtypes(exclude='datetime64').groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
           with mf_bar_by_ticker:
                mf_bar_by_ticker.subheader("Mutual Fund Assets By Product")
-               st.bar_chart(selected_date_mf_master.groupby(['Client Defined Category Name'], as_index=False).sum(), x='Client Defined Category Name', y='AUM')
+               st.bar_chart(selected_date_mf_master.select_dtypes(exclude='datetime64').groupby(['Client Defined Category Name'], as_index=False).sum(), x='Client Defined Category Name', y='AUM')
           
           etf_line_col, etf_bar_col, etf_bar_by_ticker = st.columns(3)
           
@@ -186,10 +186,10 @@ if authentication_status == True:
                st.line_chart(df_etf_master_merged.groupby(['Date'], as_index=False).sum(), x='Date', y='AUM')
           with etf_bar_col:
                etf_bar_col.subheader("ETF Assets By Wholesaler")
-               st.bar_chart(selected_date_etf_master.groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+               st.bar_chart(selected_date_etf_master.select_dtypes(exclude='datetime64').groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
           with etf_bar_by_ticker:
                etf_bar_by_ticker.subheader("ETF Assets By Ticker")
-               st.bar_chart(selected_date_etf_master.groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
+               st.bar_chart(selected_date_etf_master.select_dtypes(exclude='datetime64').groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
                
           uit_line_col, uit_bar_col, uit_bar_by_ticker = st.columns(3)
           
@@ -198,10 +198,10 @@ if authentication_status == True:
                st.line_chart(df_uit_master_merged.groupby(['Date'], as_index=False).sum(), x='Date', y='AUM')
           with uit_bar_col:
                uit_bar_col.subheader("UIT Assets By Wholesaler")
-               st.bar_chart(selected_date_uit_master.groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+               st.bar_chart(selected_date_uit_master.select_dtypes(exclude='datetime64').groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
           with uit_bar_by_ticker:
                uit_bar_by_ticker.subheader("UIT Assets By Ticker")
-               st.bar_chart(selected_date_uit_master.groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
+               st.bar_chart(selected_date_uit_master.select_dtypes(exclude='datetime64').groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
                
           
                
