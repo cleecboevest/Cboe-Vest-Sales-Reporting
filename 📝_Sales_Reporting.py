@@ -17,10 +17,10 @@ def format_dollar_amount(amount):
 def load_mf_data(url):
      #----------READ IN DATA--------
      # Read in the Broadridge Data
-     df_mf_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
+     df_mf_master = pd.read_excel(url,sheet_name='Sales Data Merge',engine='openpyxl',skiprows=0)
      return df_mf_master
 
-@st.cache_data(ttl=21*24*3600)
+@st.cache_data(ttl=180*24*3600)
 def load_vest_wholesaler_data(url):
      #----------READ IN DATA--------
      # Read in the Cboe Vest Wholesaler Territory Data
@@ -90,13 +90,13 @@ if authentication_status == True:
 
      # Load in the data and perform operations on the Dataframe
      # Merged Master_Table and Sheet1 into df3
-     df_mf_master_merged = df_mf_master.merge(df_vest_wholesalers, left_on=['State/Region'], right_on=['State'], how='outer')
+     #df_mf_master_merged = df_mf_master.merge(df_vest_wholesalers, left_on=['State/Region'], right_on=['State'], how='outer')
      df_etf_master_merged = df_etf_master.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how='left')
      df_uit_master_merged = df_uit_master.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how='left')
      date_options = df_mf_master['Month/Year (Asset Date)'].dt.strftime('%m-%Y').unique().tolist()
 
      # Filtered NNA
-     df3_nna = df_mf_master_merged[df_mf_master_merged['NNA'].notnull()]
+     #df3_nna = df_mf_master_merged[df_mf_master_merged['NNA'].notnull()]
 
      # Sorted NNA in descending order
      #df3 = df3.sort_values(by='NNA', ascending=False, na_position='last')
@@ -109,8 +109,8 @@ if authentication_status == True:
      #selected_prev_date_master = df_mf_master[df_mf_master['Month/Year (Asset Date)'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
 
      # Filter the date on the merged table as well. We will use this table for wholesaler filter
-     selected_date_mf_master = df_mf_master_merged[df_mf_master_merged['Month/Year (Asset Date)'] == pd.to_datetime(date_select + "-01",format='%m-%Y-%d')]
-     selected_prev_date_mf_master = df_mf_master_merged[df_mf_master_merged['Month/Year (Asset Date)'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
+     selected_date_mf_master = df_mf_master[df_mf_master['Month/Year (Asset Date)'] == pd.to_datetime(date_select + "-01",format='%m-%Y-%d')]
+     selected_prev_date_mf_master = df_mf_master[df_mf_master['Month/Year (Asset Date)'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
      selected_date_etf_master = df_etf_master_merged[df_etf_master_merged['Date'] == pd.to_datetime(date_select + "-01",format='%m-%Y-%d')]
      selected_prev_date_etf_master = df_etf_master_merged[df_etf_master_merged['Date'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
      selected_date_uit_master = df_uit_master_merged[df_uit_master_merged['Date'] == pd.to_datetime(date_select + "-01",format='%m-%Y-%d')]
@@ -144,8 +144,8 @@ if authentication_status == True:
 
           # Calculate total NNA by filtering from the master table all blank values in the NNA column
           # then we create a new dataframe and use this to get NNA
-          selected_date_NNA = selected_date_mf_master[selected_date_mf_master['NNA'].notnull()]['NNA'].sum()
-          selected_prev_date_NNA = selected_prev_date_mf_master[selected_prev_date_mf_master['NNA'].notnull()]['NNA'].sum()
+          selected_date_NNA = selected_date_mf_master['NNA'].sum()
+          selected_prev_date_NNA = selected_prev_date_mf_master['NNA'].sum()
           change_in_NNA = selected_date_NNA - selected_prev_date_NNA
           col2.metric("Total Mutual Funds NNA", format_dollar_amount(selected_date_NNA), format_dollar_amount(change_in_NNA))
           col2.caption("Month Over Month Change")
@@ -171,7 +171,7 @@ if authentication_status == True:
           
           with mf_line_col:
                mf_line_col.subheader("Mutual Fund Assets Over Time")
-               st.line_chart(df_mf_master_merged.groupby(['Month/Year (Asset Date)'], as_index=False).sum(), x='Month/Year (Asset Date)', y='AUM')
+               st.line_chart(df_mf_master.groupby(['Month/Year (Asset Date)'], as_index=False).sum(), x='Month/Year (Asset Date)', y='AUM')
           with mf_bar_col:
                mf_bar_col.subheader("Mutual Fund Assets By Wholesaler")
                st.bar_chart(selected_date_mf_master.groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
