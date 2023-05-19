@@ -14,10 +14,17 @@ def format_dollar_amount(amount):
     return formatted_absolute_amount
 
 @st.cache_data(ttl=21*24*3600)
-def load_mf_data(url):
+def load_mf_sales_data(url):
      #----------READ IN DATA--------
      # Read in the Broadridge Data
      df_mf_master = pd.read_excel(url,sheet_name='Sales Data Merge',engine='openpyxl',skiprows=0)
+     return df_mf_master
+
+@st.cache_data(ttl=21*24*3600)
+def load_mf_cohort_data(url):
+     #----------READ IN DATA--------
+     # Read in the Broadridge Data
+     df_mf_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
      return df_mf_master
 
 @st.cache_data(ttl=30*24*3600)
@@ -31,7 +38,7 @@ def load_vest_wholesaler_data(url):
 def load_etf_data(url):
      #----------READ IN DATA--------
      # Read in the FT ETF Sales Data
-     df_etf_master = pd.read_excel(url,engine='openpyxl',skiprows=0)
+     df_etf_master = pd.read_excel(url,sheet_name='Sales Data',engine='openpyxl',skiprows=0)
      return df_etf_master
 
 @st.cache_data(ttl=21*24*3600)
@@ -83,7 +90,8 @@ if authentication_status == True:
      
      #----------STATUS MESSAGE------
      with st.spinner('Loading All Sales Data. This May Take A Minute. Please wait...'):
-          df_mf_master = load_mf_data(st.secrets['mf_sales_url'])
+          df_mf_sales_master = load_mf_sales_data(st.secrets['mf_sales_url'])
+          df_mf_cohort_master = load_mf_cohort_data(st.secrets['mf_analyzer_url'])
           df_etf_master = load_etf_data(st.secrets['etf_sales_url'])
           df_uit_master = load_uit_data(st.secrets['uit_sales_url'])
           df_vest_wholesalers = load_vest_wholesaler_data(st.secrets['vest_wholesaler_url'])
@@ -91,9 +99,9 @@ if authentication_status == True:
      # Load in the data and perform operations on the Dataframe
      # Merged Master_Table and Sheet1 into df3
      #df_mf_master_merged = df_mf_master.merge(df_vest_wholesalers, left_on=['State/Region'], right_on=['State'], how='outer')
-     df_etf_master_merged = df_etf_master.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how='left')
+     #df_etf_master_merged = df_etf_master.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how='left')
      df_uit_master_merged = df_uit_master.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how='left')
-     date_options = df_mf_master['Month/Year (Asset Date)'].dt.strftime('%m-%Y').unique().tolist()
+     date_options = df_mf_sales_master['Month/Year (Asset Date)'].dt.strftime('%m-%Y').unique().tolist()
 
      # Filtered NNA
      #df3_nna = df_mf_master_merged[df_mf_master_merged['NNA'].notnull()]
@@ -109,10 +117,10 @@ if authentication_status == True:
      #selected_prev_date_master = df_mf_master[df_mf_master['Month/Year (Asset Date)'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
 
      # Filter the date on the merged table as well. We will use this table for wholesaler filter
-     selected_date_mf_master = df_mf_master[df_mf_master['Month/Year (Asset Date)'] == pd.to_datetime(date_select + "-01",format='%m-%Y-%d')]
-     selected_prev_date_mf_master = df_mf_master[df_mf_master['Month/Year (Asset Date)'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
-     selected_date_etf_master = df_etf_master_merged[df_etf_master_merged['Date'] == pd.to_datetime(date_select + "-01",format='%m-%Y-%d')]
-     selected_prev_date_etf_master = df_etf_master_merged[df_etf_master_merged['Date'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
+     selected_date_mf_master = df_mf_sales_master[df_mf_sales_master['Month/Year (Asset Date)'] == pd.to_datetime(date_select + "-01",format='%m-%Y-%d')]
+     selected_prev_date_mf_master = df_mf_sales_master[df_mf_sales_master['Month/Year (Asset Date)'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
+     selected_date_etf_master = df_etf_master[df_etf_master['Date'] == pd.to_datetime(date_select + "-01",format='%m-%Y-%d')]
+     selected_prev_date_etf_master = df_etf_master[df_etf_master['Date'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
      selected_date_uit_master = df_uit_master_merged[df_uit_master_merged['Date'] == pd.to_datetime(date_select + "-01",format='%m-%Y-%d')]
      selected_prev_date_uit_master = df_uit_master_merged[df_uit_master_merged['Date'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
 
@@ -171,25 +179,25 @@ if authentication_status == True:
           
           with mf_line_col:
                mf_line_col.subheader("Mutual Fund Assets Over Time")
-               st.line_chart(df_mf_master.groupby(['Month/Year (Asset Date)'], as_index=False).sum(), x='Month/Year (Asset Date)', y='AUM')
+               st.line_chart(df_mf_sales_master.groupby(['Month/Year (Asset Date)'], as_index=False).sum(), x='Month/Year (Asset Date)', y='AUM')
           with mf_bar_col:
                mf_bar_col.subheader("Mutual Fund Assets By Wholesaler")
-               st.bar_chart(selected_date_mf_master.select_dtypes(exclude='datetime64').groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+               st.bar_chart(selected_date_mf_master[['Wholesaler','AUM']].groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
           with mf_bar_by_ticker:
                mf_bar_by_ticker.subheader("Mutual Fund Assets By Product")
-               st.bar_chart(selected_date_mf_master.select_dtypes(exclude='datetime64').groupby(['Client Defined Category Name'], as_index=False).sum(), x='Client Defined Category Name', y='AUM')
+               st.bar_chart(selected_date_mf_master[['Client Defined Category Name','AUM']].groupby(['Client Defined Category Name'], as_index=False).sum(), x='Client Defined Category Name', y='AUM')
           
           etf_line_col, etf_bar_col, etf_bar_by_ticker = st.columns(3)
           
           with etf_line_col:
                etf_line_col.subheader("ETF Assets Over Time")
-               st.line_chart(df_etf_master_merged.groupby(['Date'], as_index=False).sum(), x='Date', y='AUM')
+               st.line_chart(df_etf_master.groupby(['Date'], as_index=False).sum(), x='Date', y='AUM')
           with etf_bar_col:
                etf_bar_col.subheader("ETF Assets By Wholesaler")
-               st.bar_chart(selected_date_etf_master.select_dtypes(exclude='datetime64').groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+               st.bar_chart(selected_date_etf_master[['Wholesaler','AUM']].groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
           with etf_bar_by_ticker:
                etf_bar_by_ticker.subheader("ETF Assets By Ticker")
-               st.bar_chart(selected_date_etf_master.select_dtypes(exclude='datetime64').groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
+               st.bar_chart(selected_date_etf_master[['Ticker','AUM']].groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
                
           uit_line_col, uit_bar_col, uit_bar_by_ticker = st.columns(3)
           
@@ -198,10 +206,10 @@ if authentication_status == True:
                st.line_chart(df_uit_master_merged.groupby(['Date'], as_index=False).sum(), x='Date', y='AUM')
           with uit_bar_col:
                uit_bar_col.subheader("UIT Assets By Wholesaler")
-               st.bar_chart(selected_date_uit_master.select_dtypes(exclude='datetime64').groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+               st.bar_chart(selected_date_uit_master[['Wholesaler','AUM']].groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
           with uit_bar_by_ticker:
                uit_bar_by_ticker.subheader("UIT Assets By Ticker")
-               st.bar_chart(selected_date_uit_master.select_dtypes(exclude='datetime64').groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
+               st.bar_chart(selected_date_uit_master[['Ticker','AUM']].groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
                
           
                
@@ -215,6 +223,7 @@ if authentication_status == True:
           
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Wholesaler'].str.contains('Capizzi', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Wholesaler'].str.contains('Capizzi', na=False)]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Wholesaler'].str.contains('Capizzi', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
@@ -229,29 +238,28 @@ if authentication_status == True:
           col2.metric("Total Mutual Funds NNA", format_dollar_amount(selected_date_NNA['NNA'].sum()), format_dollar_amount(change_in_NNA))
           col2.caption("Month Over Month Change")
           
-          st.subheader("Metrics")
-          zizi_mf_line, zizi_mf_bar = st.columns(2)
+          #st.subheader("Metrics")
+          #zizi_mf_line, zizi_mf_bar = st.columns(2)
           
           st.markdown("""---""")
           
-          with st.expander("Flows Insight", expanded=False):
-               st.subheader('Top 20 Clients')
-               AgGrid(selected_date_df3_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                                            'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                                            'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
-                    width='100%')
-               
-               st.subheader('Top 10 Inflows')
-               AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                        'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                        'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
-                    width='100%')
-               
-               st.subheader('Top 10 Outflows')
-               AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                        'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                        'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
-                    width='100%')
+          st.subheader('Top 20 Clients')
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                       'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                       'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
+               width='100%',key='capizzi20')
+          
+          st.subheader('Top 10 Inflows')
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                       'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                       'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
+               width='100%')
+          
+          st.subheader('Top 10 Outflows')
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                       'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                       'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
+               width='100%')
 
      # Morti Tab     
      with mortimer:
@@ -260,8 +268,9 @@ if authentication_status == True:
           col1, col2 = st.columns(2)
           
           # Filtered Wholesaler to calculate the AUM
-          selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Wholesaler'].str.contains('Mortimer', na=False)]
-          selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Wholesaler'].str.contains('Mortimer', na=False)]
+          selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Wholesaler'].str.contains('Morti', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Wholesaler'].str.contains('Morti', na=False)]
+          selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Wholesaler'].str.contains('Morti', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
           change_in_AUM = selected_date_AUM - selected_prev_date_AUM
@@ -275,23 +284,25 @@ if authentication_status == True:
           col2.metric("Total Mutual Funds NNA", format_dollar_amount(selected_date_NNA['NNA'].sum()), format_dollar_amount(change_in_NNA))
           col2.caption("Month Over Month Change")
           
+          st.markdown("""---""")
+          
           st.subheader('Top 20 Clients')
-          AgGrid(selected_date_df3_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                                       'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                                       'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
-               width='100%')
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
+               width='100%',key='mortimer20')
           
           st.subheader('Top 10 Inflows')
-          AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                   'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                   'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
-               width='100%')
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
+               width='100%',key='mortimer_top_10_inflow')
           
           st.subheader('Top 10 Outflows')
-          AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                   'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                   'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
-               width='100%')
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
+               width='100%',key='mortimer_top_10_outflow')
           
      # Poggi Tab     
      with poggi:
@@ -301,6 +312,7 @@ if authentication_status == True:
           
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Wholesaler'].str.contains('Poggi', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Wholesaler'].str.contains('Poggi', na=False)]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Wholesaler'].str.contains('Poggi', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
@@ -315,22 +327,24 @@ if authentication_status == True:
           col2.metric("Total Mutual Funds NNA", format_dollar_amount(selected_date_NNA['NNA'].sum()), format_dollar_amount(change_in_NNA))
           col2.caption("Month Over Month Change")
           
+          st.markdown("""---""")
+          
           st.subheader('Top 20 Clients')
-          AgGrid(selected_date_df3_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                                       'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                                       'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
                width='100%')
           
           st.subheader('Top 10 Inflows')
-          AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                   'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                   'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
                width='100%')
           
           st.subheader('Top 10 Outflows')
-          AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                   'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                   'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
                width='100%')
           
      # Sullivan Tab     
@@ -341,6 +355,7 @@ if authentication_status == True:
           
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Wholesaler'].str.contains('Sullivan', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Wholesaler'].str.contains('Sullivan', na=False)]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Wholesaler'].str.contains('Sullivan', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
@@ -355,20 +370,22 @@ if authentication_status == True:
           col2.metric("Total Mutual Funds NNA", format_dollar_amount(selected_date_NNA['NNA'].sum()), format_dollar_amount(change_in_NNA))
           col2.caption("Month Over Month Change")
           
+          st.markdown("""---""")
+          
           st.subheader('Top 20 Clients')
-          AgGrid(selected_date_df3_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                                       'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                                       'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
                width='100%')
           
           st.subheader('Top 10 Inflows')
-          AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                   'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                   'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
                width='100%')
           
           st.subheader('Top 10 Outflows')
-          AgGrid(selected_date_NNA[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
-                                   'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
-                                   'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
                width='100%')
