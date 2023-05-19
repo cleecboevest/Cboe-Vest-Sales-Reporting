@@ -125,7 +125,7 @@ if authentication_status == True:
      selected_prev_date_uit_master = df_uit_master_merged[df_uit_master_merged['Date'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
 
      # Create tabs that will be based on each wholesaler
-     firm, capizzi, mortimer, poggi, sullivan = st.tabs(['Firm', 'Capizzi', 'Mortimer', 'Poggi', 'Sullivan'])
+     firm, capizzi, mortimer, poggi, sullivan, unknown = st.tabs(['Firm', 'Capizzi', 'Mortimer', 'Poggi', 'Sullivan','Unknown'])
      
      # Calculate Total Firm AUM
      selected_date_mf_AUM = selected_date_mf_master['AUM'].sum()
@@ -356,6 +356,49 @@ if authentication_status == True:
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Wholesaler'].str.contains('Sullivan', na=False)]
           df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Wholesaler'].str.contains('Sullivan', na=False)]
+          selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Wholesaler'].str.contains('Sullivan', na=False)]
+          selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
+          selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
+          change_in_AUM = selected_date_AUM - selected_prev_date_AUM
+          col1.metric("Total Mutual Funds AUM", format_dollar_amount(selected_date_AUM), format_dollar_amount(change_in_AUM))
+          col1.caption('Month Over Month Change')
+          
+          # Net New Assets Calculations
+          selected_date_NNA = selected_date_df3_master_by_wholesaler[selected_date_df3_master_by_wholesaler['NNA'].notnull()]
+          selected_prev_date_NNA = selected_prev_date_df3_master_by_wholesaler[selected_prev_date_df3_master_by_wholesaler['NNA'].notnull()]
+          change_in_NNA = selected_date_NNA['NNA'].sum() - selected_prev_date_NNA['NNA'].sum()
+          col2.metric("Total Mutual Funds NNA", format_dollar_amount(selected_date_NNA['NNA'].sum()), format_dollar_amount(change_in_NNA))
+          col2.caption("Month Over Month Change")
+          
+          st.markdown("""---""")
+          
+          st.subheader('Top 20 Clients')
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
+               width='100%')
+          
+          st.subheader('Top 10 Inflows')
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['NNA'], ascending=False).head(10),
+               width='100%')
+          
+          st.subheader('Top 10 Outflows')
+          AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
+                                                    'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
+                                                    'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
+               width='100%')
+          
+     # Sullivan Tab     
+     with unknown:
+          # Create the headers
+          st.header("Unknown Region Summary")
+          col1, col2 = st.columns(2)
+          
+          # Filtered Wholesaler to calculate the AUM
+          selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Wholesaler'].isnull()]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Wholesaler'].isnull()]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Wholesaler'].str.contains('Sullivan', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
