@@ -99,14 +99,14 @@ if authentication_status == True:
      # Merge all FT and Vest Wholesalers together     
      df_wholesaler_merged = df_ft_wholesalers.merge(df_vest_wholesalers,left_on='State',right_on='State',how='left')
      # Then merge all wholesalers list with the ETF and UIT data to create a master table by clients and wholesalers
-     df_etf_master_merged = df_etf_master.merge(df_wholesaler_merged, left_on=['Zip'], right_on=['Zip'], how='left').rename(columns={'City_x':'City','State_x':'State'})
+     #df_etf_master_merged = df_etf_master.merge(df_wholesaler_merged, left_on=['Zip'], right_on=['Zip'], how='left').rename(columns={'City_x':'City','State_x':'State'})
      df_uit_master_merged = df_uit_master.merge(df_wholesaler_merged, left_on=['Zip'], right_on=['Zip'], how='left').rename(columns={'City_x':'City','State_x':'State'})
      
      df_buffer_etf_master = df_etf_master[df_etf_master['Ticker'].isin(st.secrets['buffer_etf_tickers'])]
      df_target_income_etf_master = df_etf_master[df_etf_master['Ticker'].isin(st.secrets['target_income_etf_tickers'])]
      
-     etf_ticker_options = df_etf_master_merged['Ticker'].sort_values().unique().tolist()
-     date_options = df_etf_master_merged['Date'].dt.strftime('%m-%Y').unique().tolist()
+     etf_ticker_options = df_etf_master['Ticker'].sort_values().unique().tolist()
+     date_options = df_etf_master['Date'].dt.strftime('%m-%Y').unique().tolist()
      sp_wholesaler_options = df_etf_master['SP Outsider'].sort_values().unique().tolist()
      etf_wholesaler_options = df_etf_master['ETF Outsider'].sort_values().unique().tolist()
      uit_wholesaler_options = df_etf_master['COM Outsider'].sort_values().unique().tolist()
@@ -198,7 +198,7 @@ if authentication_status == True:
                
 
                if submitted:
-                    df_clients_by_ticker = df_etf_master_merged[df_etf_master_merged['Ticker'].isin([etf_ticker_select])].where(df_etf_master_merged['Date'] == date_select).sort_values(by=['AUM'], ascending=False)[etf_df_headers].fillna('').head(100)
+                    df_clients_by_ticker = df_etf_master[df_etf_master['Ticker'].isin([etf_ticker_select])].where(df_etf_master['Date'] == date_select).sort_values(by=['AUM'], ascending=False)[etf_df_headers].fillna('').head(100)
                     df_clients_by_ticker['AUM'] = df_clients_by_ticker['AUM'].apply(lambda x: format_dollar_amount(x))
                     AgGrid(df_clients_by_ticker)
                     
