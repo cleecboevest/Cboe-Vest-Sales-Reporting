@@ -3,7 +3,7 @@ from click import style
 import streamlit as st
 import pandas as pd
 import numpy as np
-from st_aggrid import AgGrid, GridOptionsBuilder, ColumnsAutoSizeMode, AgGridTheme
+from st_aggrid import AgGrid, GridOptionsBuilder, ColumnsAutoSizeMode, AgGridTheme, GridUpdateMode
 
 from pathlib import Path
 import yaml
@@ -18,6 +18,14 @@ def format_dollar_amount(amount):
 
 def format_headers(df):
      df['AUM'] = df['AUM'].apply(lambda x: format_dollar_amount(x))
+     #df['Industry AUM'] = df['Industry AUM'].apply(lambda x: format_dollar_amount(x))
+     #df['NNA'] = df['NNA'].apply(lambda x: format_dollar_amount(x))
+     #df['Industry NNA'] = df['Industry NNA'].apply(lambda x: format_dollar_amount(x))
+     return df
+
+def format_ticker_headers(df):
+     for column in df:
+          df[column] = df[column].apply(lambda x: format_dollar_amount(x))
      #df['Industry AUM'] = df['Industry AUM'].apply(lambda x: format_dollar_amount(x))
      #df['NNA'] = df['NNA'].apply(lambda x: format_dollar_amount(x))
      #df['Industry NNA'] = df['Industry NNA'].apply(lambda x: format_dollar_amount(x))
@@ -130,7 +138,7 @@ if authentication_status == True:
           #     vest_wholesaler_select = False
           
           # Submit button and then perform operation on data based on the conditions
-          if st.button("Submit", key='wholesaler ranking button'):
+          if st.button("Submit", key='update_ranking'):
                if wholesaler_type_select == 'Structured':
                     if vest_wholesaler_select:
                          df_wholesaler_rank = df_buffer_etf_master.where((df_buffer_etf_master['Date'] == date_select) & (df_buffer_etf_master['Wholesaler'] == vest_wholesaler_select)).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False, ignore_index=True)
@@ -139,11 +147,15 @@ if authentication_status == True:
                elif wholesaler_type_select == 'ETF':
                     if vest_wholesaler_select:
                          if split_columns_by_ticker:
-                              df_wholesaler_rank = df_target_income_etf_master.where((df_target_income_etf_master['Date'] == date_select) & (df_target_income_etf_master['Wholesaler'] == vest_wholesaler_select) & df_target_income_etf_master['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider','Ticker','Wholesaler'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False).pivot(index='ETF Outsider',columns='Ticker',values='AUM')
+                              df_wholesaler_rank = df_target_income_etf_master.where((df_target_income_etf_master['Wholesaler'] == vest_wholesaler_select) & df_target_income_etf_master['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider','Ticker','Wholesaler'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False).pivot(index='ETF Outsider',columns='Ticker',values='AUM')
                          else:
-                              df_wholesaler_rank = df_target_income_etf_master.where((df_target_income_etf_master['Date'] == date_select) & (df_target_income_etf_master['Wholesaler'] == vest_wholesaler_select) & df_target_income_etf_master['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False, ignore_index=True)
+                              df_wholesaler_rank = df_target_income_etf_master.where((df_target_income_etf_master['Wholesaler'] == vest_wholesaler_select) & df_target_income_etf_master['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False, ignore_index=True)
                     elif split_columns_by_ticker:
-                         df_wholesaler_rank = df_target_income_etf_master.where((df_target_income_etf_master['Date'] == date_select) & df_target_income_etf_master['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider', 'Ticker'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False).pivot(index='ETF Outsider',columns='Ticker',values='AUM')
+                         df_wholesaler_rank = df_target_income_etf_master.where(df_target_income_etf_master['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider', 'Wholesaler', 'Ticker'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False).pivot(index=['ETF Outsider', 'Wholesaler'], columns='Ticker', values='AUM')
+                         for column in df_wholesaler_rank:
+                              df_wholesaler_rank[column].astype(float)
+                         #df_wholesaler_rank = format_ticker_headers(df_wholesaler_rank)
+                         #df_wholesaler_rank.insert(0, 'ETF Outsider', df_wholesaler_rank.index)
                     else:     
                          df_wholesaler_rank = df_target_income_etf_master.where((df_target_income_etf_master['Date'] == date_select) & df_target_income_etf_master['Ticker'].isin(st.secrets['target_income_etf_tickers'])).groupby(['ETF Outsider','Wholesaler'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False, ignore_index=True)
                else:
@@ -160,21 +172,25 @@ if authentication_status == True:
                # Configure the AG-Grid options to better display the data
                gb = GridOptionsBuilder.from_dataframe(updated_df)
                
+               # Build the columns
                gb.configure_default_column(
                     resizable=True,
                     filterable=True,
                     sortable=True,
-                    editable=False,)
+                    editable=False,)               
                
                gb.configure_pagination(paginationPageSize=100)
                gridOptions = gb.build()
                
-               output = AgGrid(
-                    updated_df,
-                    gridOptions=gridOptions,
-                    columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
-                    theme=AgGridTheme.ALPINE,
-                    )
+               #output = AgGrid(
+               #     updated_df,
+               #     gridOptions=gridOptions,
+               #     columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
+               #     theme=AgGridTheme.ALPINE,
+               #     update_mode=GridUpdateMode.SELECTION_CHANGED
+               #     )        
+               
+               st.dataframe(df_wholesaler_rank)  
                     
      #with st.expander('ETF Wholesaler Ranking'):
      #     with st.form('ETF Wholesaler Rank Form'):
