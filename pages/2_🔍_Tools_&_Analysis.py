@@ -143,7 +143,7 @@ if authentication_status == True:
                     if vest_wholesaler_select:
                          df_wholesaler_rank = df_buffer_etf_master.where((df_buffer_etf_master['Date'] == date_select) & (df_buffer_etf_master['Wholesaler'] == vest_wholesaler_select)).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False, ignore_index=True)
                     else:
-                         df_wholesaler_rank = df_buffer_etf_master.where((df_buffer_etf_master['Date'] == date_select) & (df_buffer_etf_master['Ticker'].isin(st.secrets['buffer_etf_tickers']))).groupby(['SP Outsider','Wholesaler'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False, ignore_index=True)
+                         df_wholesaler_rank = df_buffer_etf_master.where((df_buffer_etf_master['Date'] == date_select) & (df_buffer_etf_master['Ticker'].isin(st.secrets['buffer_etf_tickers']))).groupby(['SP Outsider'], as_index=False)['AUM'].sum().sort_values(by=['AUM'],ascending=False, ignore_index=True)
                elif wholesaler_type_select == 'ETF':
                     if vest_wholesaler_select:
                          if split_columns_by_ticker:
