@@ -81,7 +81,7 @@ def process_dataframe(df_vest_wholesalers, df_mf_master, df_ft_wholesalers):
      
      df_master_merged = df_mf_master.merge(df_merged_wholesalers, left_on=['Postal Code'], right_on=['Zip'], how='left', suffixes=(None,'_right'))
      # The master Dataframe is now complete. We can now start filtering on the data
-     df_master_merged = df_master_merged.replace({'Client Defined Category Name':{'BUIGX #1':'Buffer10/Hedged Equity','BUIGX #2':'Innovator ETFs','KNGIX':'Aristocrats/Gold','ENGIX':'Buffer20/Bitcoin','KNG':'Income ETFs'}})
+     df_master_merged = df_master_merged.replace({'Client Defined Category Name':{'BUIGX #1':'Buffer10/Hedged Equity','BUIGX #2':'Innovator ETFs/Swan','KNGIX':'Aristocrats/Gold','ENGIX':'Buffer20/Bitcoin','RYSE':'IRH/Income ETFs'}})
      df_master_merged = df_master_merged[column_headers]
      
      return df_master_merged
