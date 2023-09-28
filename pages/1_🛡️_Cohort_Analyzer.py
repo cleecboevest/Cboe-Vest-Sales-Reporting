@@ -137,7 +137,7 @@ def filter_dataframe(df):
                          f"Select the {column}",
                          df2['COM Outsider'].sort_values().unique(),
                     )
-                    df2 = df2[df2['COM Outsider'].isin(user_etfperson_input)].sort_values(by=['AUM'], ascending=False)
+                    df2 = df2[df2['COM Outsider'].isin(user_comperson_input)].sort_values(by=['AUM'], ascending=False)
                elif column == 'Vest Wholesaler':
                     user_vestperson_input = right.multiselect(
                          f"Select the {column}",
