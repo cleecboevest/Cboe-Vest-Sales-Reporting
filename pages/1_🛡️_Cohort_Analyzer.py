@@ -67,7 +67,7 @@ def load_data():
 def process_dataframe(df_vest_wholesalers, df_mf_master, df_ft_wholesalers):
      
      # Define the column headers to display
-     column_headers = ['Client Defined Category Name','ETF Outsider','SP Outsider','Wholesaler','Intermediary Firm Name', 'Initiating Firm Name','Address Line 1', 'Address Line 2', 'City','Postal Code','State/Region','Channel','AUM','Industry AUM','NNA','Industry NNA']
+     column_headers = ['Client Defined Category Name','ETF Outsider','SP Outsider','COM Outsider','Wholesaler','Intermediary Firm Name', 'Initiating Firm Name','Address Line 1', 'Address Line 2', 'City','Postal Code','State/Region','Channel','AUM','Industry AUM','NNA','Industry NNA']
      date_options = df_mf_master['Month/Year (Asset Date)'].dt.strftime('%Y-%m-%d').unique().tolist()
      
      # Select the most recent date in the file and only display results from the most recent period
@@ -109,7 +109,7 @@ def filter_dataframe(df):
 
      with modification_container:
           to_filter_columns = st.multiselect("Filter dataframe on", 
-                                             ['Cohort', 'ETF Outsider', 'SP Outsider', 'Vest Wholesaler', 'Channel'])
+                                             ['Cohort', 'ETF Outsider', 'SP Outsider', 'COM Outsider', 'Vest Wholesaler', 'Channel'])
           for column in to_filter_columns:
                left, right = st.columns((1, 20))
                left.write("↳")
@@ -132,6 +132,12 @@ def filter_dataframe(df):
                          df2['SP Outsider'].sort_values().unique(),
                     )
                     df2 = df2[df2['SP Outsider'].isin(user_spperson_input)].sort_values(by=['AUM'], ascending=False)
+               elif column == 'COM Outsider':
+                    user_comperson_input = right.multiselect(
+                         f"Select the {column}",
+                         df2['COM Outsider'].sort_values().unique(),
+                    )
+                    df2 = df2[df2['COM Outsider'].isin(user_etfperson_input)].sort_values(by=['AUM'], ascending=False)
                elif column == 'Vest Wholesaler':
                     user_vestperson_input = right.multiselect(
                          f"Select the {column}",
