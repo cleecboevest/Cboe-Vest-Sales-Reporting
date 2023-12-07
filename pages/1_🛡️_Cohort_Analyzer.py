@@ -54,20 +54,29 @@ def load_mf_data(url):
      df_mf_master = pd.read_excel(url,engine='openpyxl', dtype={'Postal Code': str})
      return df_mf_master
 
+@st.cache_data(ttl=21*24*3600)
+def load_territory_data(url):
+     #----------READ IN DATA--------
+     # Read in the Wholesaler Territory Data
+     df_territory_master = pd.read_csv(url, dtype={'Zip': str})
+     return df_territory_master
+
 
 def load_data():
      # Load all the sales data
-     df_vest_wholesalers = load_vest_wholesaler_data(st.secrets['vest_wholesaler_url'])
+     #df_vest_wholesalers = load_vest_wholesaler_data(st.secrets['vest_wholesaler_url'])
      df_mf_master = load_mf_data(st.secrets['mf_analyzer_url'])
-     df_ft_wholesalers = load_ft_wholesaler_data(st.secrets['ft_wholesaler_url'])
+     #df_ft_wholesalers = load_ft_wholesaler_data(st.secrets['ft_wholesaler_url'])
+     df_territory_master = load_territory_data(st.secrets['master_territory_url'])
      
-     return df_vest_wholesalers, df_mf_master, df_ft_wholesalers
+     #return df_vest_wholesalers, df_mf_master, df_ft_wholesalers
+     return df_mf_master, df_territory_master
 
 @st.cache_data(ttl=21*24*3600)
-def process_dataframe(df_vest_wholesalers, df_mf_master, df_ft_wholesalers):
+def process_dataframe(df_mf_master, df_territory_master):
      
      # Define the column headers to display
-     column_headers = ['Client Defined Category Name','ETF Outsider','SP Outsider','COM Outsider','Wholesaler','Intermediary Firm Name', 'Initiating Firm Name','Address Line 1', 'Address Line 2', 'City','Postal Code','State/Region','Channel','AUM','Industry AUM','NNA','Industry NNA']
+     column_headers = ['Client Defined Category Name','Institutional Outsider','ETF Outsider','SP Outsider','COM Outsider','Vest Wholesaler','Intermediary Firm Name', 'Initiating Firm Name','Address Line 1', 'Address Line 2', 'City','Postal Code','State/Region','Channel','AUM','Industry AUM','NNA','Industry NNA']
      date_options = df_mf_master['Month/Year (Asset Date)'].dt.strftime('%Y-%m-%d').unique().tolist()
      
      # Select the most recent date in the file and only display results from the most recent period
@@ -75,11 +84,11 @@ def process_dataframe(df_vest_wholesalers, df_mf_master, df_ft_wholesalers):
      df_mf_master = df_mf_master[df_mf_master['Month/Year (Asset Date)'] == date_select]
      
      # Perform operations on the data by merging relevant dataframes
-     df_merged_wholesalers = df_ft_wholesalers.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how="left")
+     #df_merged_wholesalers = df_ft_wholesalers.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how="left")
      # Strip the hyphens away from the MF Data zip codes
      df_mf_master['Postal Code'] = df_mf_master['Postal Code'].str[:5]
      
-     df_master_merged = df_mf_master.merge(df_merged_wholesalers, left_on=['Postal Code'], right_on=['Zip'], how='left', suffixes=(None,'_right'))
+     df_master_merged = df_mf_master.merge(df_territory_master, left_on=['Postal Code'], right_on=['Zip'], how='left', suffixes=(None,'_right'))
      # The master Dataframe is now complete. We can now start filtering on the data
      df_master_merged = df_master_merged.replace({'Client Defined Category Name':{'BUIGX #1':'Buffer10/Hedged Equity','BUIGX #2':'Innovator ETFs/Swan','KNGIX':'Aristocrats/Gold','ENGIX':'Buffer20/Bitcoin','RYSE':'IRH/Income ETFs'}})
      df_master_merged = df_master_merged[column_headers]
@@ -109,7 +118,7 @@ def filter_dataframe(df):
 
      with modification_container:
           to_filter_columns = st.multiselect("Filter dataframe on", 
-                                             ['Cohort', 'ETF Outsider', 'SP Outsider', 'COM Outsider', 'Vest Wholesaler', 'Channel'])
+                                             ['Cohort', 'Institutional Outsider','ETF Outsider', 'SP Outsider', 'COM Outsider', 'Vest Wholesaler', 'Channel'])
           for column in to_filter_columns:
                left, right = st.columns((1, 20))
                left.write("↳")
@@ -120,6 +129,12 @@ def filter_dataframe(df):
                          df2['Client Defined Category Name'].unique(),
                     )
                     df2 = df2[df2['Client Defined Category Name'].isin(user_cohort_input)].sort_values(by=['AUM'], ascending=False)
+               elif column == 'Institutional Outsider':
+                    user_institutionalperson_input = right.multiselect(
+                         f"Select the {column}",
+                         df2['ETF Outsider'].sort_values().unique(),
+                    )
+                    df2 = df2[df2['ETF Outsider'].isin(user_institutionalperson_input)].sort_values(by=['AUM'], ascending=False)
                elif column == 'ETF Outsider':
                     user_etfperson_input = right.multiselect(
                          f"Select the {column}",
@@ -212,8 +227,10 @@ if authentication_status == True:
      st.title('Mutual Fund Analyzer')
      st.write("Use this tool to analyze the latest month's Broadridge mutual fund sales. Filter by cohorts, wholesalers, AUM, etc. Export results into an Excel to share with others.")
      
-     df_vest_wholesalers, df_mf_master, df_ft_wholesalers = load_data()
-     df = process_dataframe(df_vest_wholesalers, df_mf_master, df_ft_wholesalers)
+     #df_vest_wholesalers, df_mf_master, df_ft_wholesalers = load_data()
+     df_mf_master, df_territory_master = load_data()
+     #df = process_dataframe(df_vest_wholesalers, df_mf_master, df_ft_wholesalers)
+     df = process_dataframe(df_mf_master, df_territory_master)
      
      # Build and filter the dataframe
      updated_df = filter_dataframe(df)

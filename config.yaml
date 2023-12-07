@@ -40,6 +40,14 @@ credentials:
       email: sneamtz@cboevest.com
       name: Steve Neamtz
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    tklein@cboevest.com:
+      email: tklein@cboevest.com
+      name: Travis Klein
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    amoussa@cboevest.com:
+      email: amoussa@cboevest.com
+      name: Andrew Moussa
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
 cookie:
   expiry_days: 30
   key: _vest_abcdef
@@ -51,3 +59,5 @@ preauthorized:
   - mcapizzi@cboevest.com
   - lpoggi@cboevest.com
   - dsullivan@cboevest.com
+  - tklein@cboevest.com
+  - amoussa@cboevest.com
