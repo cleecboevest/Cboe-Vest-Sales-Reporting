@@ -132,9 +132,9 @@ def filter_dataframe(df):
                elif column == 'Institutional Outsider':
                     user_institutionalperson_input = right.multiselect(
                          f"Select the {column}",
-                         df2['ETF Outsider'].sort_values().unique(),
+                         df2['Institutional Outsider'].sort_values().unique(),
                     )
-                    df2 = df2[df2['ETF Outsider'].isin(user_institutionalperson_input)].sort_values(by=['AUM'], ascending=False)
+                    df2 = df2[df2['Institutional Outsider'].isin(user_institutionalperson_input)].sort_values(by=['AUM'], ascending=False)
                elif column == 'ETF Outsider':
                     user_etfperson_input = right.multiselect(
                          f"Select the {column}",
