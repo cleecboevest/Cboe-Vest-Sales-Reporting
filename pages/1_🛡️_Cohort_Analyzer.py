@@ -156,9 +156,9 @@ def filter_dataframe(df):
                elif column == 'Vest Wholesaler':
                     user_vestperson_input = right.multiselect(
                          f"Select the {column}",
-                         df2['Wholesaler'].sort_values().unique(),
+                         df2['Vest Wholesaler'].sort_values().unique(),
                     )
-                    df2 = df2[df2['Wholesaler'].isin(user_vestperson_input)].sort_values(by=['AUM'], ascending=False)
+                    df2 = df2[df2['Vest Wholesaler'].isin(user_vestperson_input)].sort_values(by=['AUM'], ascending=False)
                elif column == 'Channel':
                     user_channel_input = right.multiselect(
                          f"Select the {column}",
