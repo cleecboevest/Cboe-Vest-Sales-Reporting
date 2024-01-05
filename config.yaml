@@ -1,50 +1,50 @@
 credentials:
   usernames:
-    ksood@cboevest.com:
+    ksood@vestfin.com:
       email: ksood@vestfin.com
       name: Karan Sood
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    spaloka@cboevest.com:
+    spaloka@vestfin.com:
       email: spaloka@vestfin.com
       name: Sofia Paloka
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    cmortimer@cboevest.com:
+    cmortimer@vestfin.com:
       email: cmortimer@vestfin.com
       name: Christopher Mortimer
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    jchang@cboevest.com:
+    jchang@vestfin.com:
       email: jchang@vestfin.com
       name: Jeff Chang
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    mcapizzi@cboevest.com:
+    mcapizzi@vestfin.com:
       email: mcapizzi@vestfin.com
       name: Michael Capizzi
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    dsullivan@cboevest.com:
+    dsullivan@vestfin.com:
       email: dsullivan@vestfin.com
       name: Dan Sullivan
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    lpoggi@cboevest.com:
+    lpoggi@vestfin.com:
       email: lpoggi@vestfin.com
       name: Luke Poggi
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    clee@cboevest.com:
+    clee@vestfin.com:
       email: clee@vestfin.com
       name: Chris Lee
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    ksullivan@cboevest.com:
+    ksullivan@vestfin.com:
       email: ksullivan@vestfin.com
       name: Kevin Sullivan
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    sneamtz@cboevest.com:
+    sneamtz@vestfin.com:
       email: sneamtz@vestfin.com
       name: Steve Neamtz
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    tklein@cboevest.com:
+    tklein@vestfin.com:
       email: tklein@vestfin.com
       name: Travis Klein
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    amoussa@cboevest.com:
+    amoussa@vestfin.com:
       email: amoussa@vestfin.com
       name: Andrew Moussa
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
