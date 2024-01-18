@@ -1,51 +1,51 @@
 credentials:
   usernames:
-    ksood@cboevest.com:
-      email: ksood@cboevest.com
+    ksood@vestfin.com:
+      email: ksood@vestfin.com
       name: Karan Sood
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    spaloka@cboevest.com:
-      email: spaloka@cboevest.com
+    spaloka@vestfin.com:
+      email: spaloka@vestfin.com
       name: Sofia Paloka
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    cmortimer@cboevest.com:
-      email: cmortimer@cboevest.com
+    cmortimer@vestfin.com:
+      email: cmortimer@vestfin.com
       name: Christopher Mortimer
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    jchang@cboevest.com:
-      email: jchang@cboevest.com
+    jchang@vestfin.com:
+      email: jchang@vestfin.com
       name: Jeff Chang
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    mcapizzi@cboevest.com:
-      email: mcapizzi@cboevest.com
+    mcapizzi@vestfin.com:
+      email: mcapizzi@vestfin.com
       name: Michael Capizzi
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    dsullivan@cboevest.com:
-      email: dsullivan@cboevest.com
+    dsullivan@vestfin.com:
+      email: dsullivan@vestfin.com
       name: Dan Sullivan
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    lpoggi@cboevest.com:
-      email: lpoggi@cboevest.com
+    lpoggi@vestfin.com:
+      email: lpoggi@vestfin.com
       name: Luke Poggi
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    clee@cboevest.com:
-      email: clee@cboevest.com
+    clee@vestfin.com:
+      email: clee@vestfin.com
       name: Chris Lee
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    ksullivan@cboevest.com:
-      email: ksullivan@cboevest.com
+    ksullivan@vestfin.com:
+      email: ksullivan@vestfin.com
       name: Kevin Sullivan
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    sneamtz@cboevest.com:
-      email: sneamtz@cboevest.com
+    sneamtz@vestfin.com:
+      email: sneamtz@vestfin.com
       name: Steve Neamtz
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    tklein@cboevest.com:
-      email: tklein@cboevest.com
+    tklein@vestfin.com:
+      email: tklein@vestfin.com
       name: Travis Klein
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    amoussa@cboevest.com:
-      email: amoussa@cboevest.com
+    amoussa@vestfin.com:
+      email: amoussa@vestfin.com
       name: Andrew Moussa
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
 cookie:
@@ -54,10 +54,11 @@ cookie:
   name: sales_dashboard
 preauthorized:
   emails:
-  - jchang@cboevest.com
-  - cmortimer@cboevest.com
-  - mcapizzi@cboevest.com
-  - lpoggi@cboevest.com
-  - dsullivan@cboevest.com
-  - tklein@cboevest.com
-  - amoussa@cboevest.com
+  - jchang@vestfin.com
+  - cmortimer@vestfin.com
+  - mcapizzi@vestfin.com
+  - lpoggi@vestfin.com
+  - dsullivan@vestfin.com
+  - tklein@vestfin.com
+  - amoussa@vestfin.com
+  - clee@vestfin.com

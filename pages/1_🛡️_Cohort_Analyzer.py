@@ -86,14 +86,14 @@ def process_dataframe(df_mf_master, df_territory_master):
      # Perform operations on the data by merging relevant dataframes
      #df_merged_wholesalers = df_ft_wholesalers.merge(df_vest_wholesalers, left_on=['State'], right_on=['State'], how="left")
      # Strip the hyphens away from the MF Data zip codes
-     df_mf_master['Postal Code'] = df_mf_master['Postal Code'].str[:5]
+     #df_mf_master['Postal Code'] = df_mf_master['Postal Code'].str[:5]
      
-     df_master_merged = df_mf_master.merge(df_territory_master, left_on=['Postal Code'], right_on=['Zip'], how='left', suffixes=(None,'_right'))
+     #df_master_merged = df_mf_master.merge(df_territory_master, left_on=['Postal Code'], right_on=['Zip'], how='left', suffixes=(None,'_right'))
      # The master Dataframe is now complete. We can now start filtering on the data
-     df_master_merged = df_master_merged.replace({'Client Defined Category Name':{'BUIGX #1':'Buffer10/Hedged Equity','BUIGX #2':'Innovator ETFs/Swan','KNGIX':'Aristocrats/Gold','ENGIX':'Buffer20/Bitcoin','RYSE':'IRH/Income ETFs'}})
-     df_master_merged = df_master_merged[column_headers]
+     df_mf_master = df_mf_master.replace({'Client Defined Category Name':{'BUIGX #1':'Buffer10/Hedged Equity','BUIGX #2':'Innovator ETFs/Swan','KNGIX':'Aristocrats/Gold','ENGIX':'Buffer20/Bitcoin','RYSE':'IRH/Income ETFs'}})     
+     df_mf_master = df_mf_master[column_headers]
      
-     return df_master_merged
+     return df_mf_master
 
 
 def filter_dataframe(df):
