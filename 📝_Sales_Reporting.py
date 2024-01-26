@@ -70,7 +70,7 @@ authenticator = stauth.Authenticate(
 )
      
    
-name, authentication_status, username = authenticator.login("Login", "main")
+name, authentication_status, username = authenticator.login('Login','main')
 
 if 'authentication_status' not in st.session_state:
      st.session_state['authentication_status'] = authentication_status
@@ -85,7 +85,7 @@ if authentication_status == None:
 if authentication_status == True:
 
      # Render logout button
-     authenticator.logout("Logout", "sidebar")
+     authenticator.logout('Logout', 'sidebar')
      st.sidebar.title(f"Welcome {name}!")
      
      #----------STATUS MESSAGE------
