@@ -194,7 +194,7 @@ if authentication_status == True:
                st.line_chart(df_etf_master.groupby(['Date'], as_index=False).sum(), x='Date', y='AUM')
           with etf_bar_col:
                etf_bar_col.subheader("ETF Assets By Wholesaler")
-               st.bar_chart(selected_date_etf_master[['Wholesaler','AUM']].groupby(['Wholesaler'], as_index=False).sum(), x='Wholesaler', y='AUM')
+               st.bar_chart(selected_date_etf_master[['Vest Wholesaler','AUM']].groupby(['Vest Wholesaler'], as_index=False).sum(), x='Vest Wholesaler', y='AUM')
           with etf_bar_by_ticker:
                etf_bar_by_ticker.subheader("ETF Assets By Ticker")
                st.bar_chart(selected_date_etf_master[['Ticker','AUM']].groupby(['Ticker'], as_index=False).sum(), x='Ticker', y='AUM')
