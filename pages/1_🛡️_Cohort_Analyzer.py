@@ -237,7 +237,7 @@ if authentication_status == True:
      
      # Configure the AG-Grid options to better display the data
      gb = GridOptionsBuilder.from_dataframe(updated_df)
-     gb.configure_pagination(paginationPageSize=100)
+     gb.configure_pagination(paginationAutoPageSize=False,paginationPageSize=100)
      gridOptions = gb.build()
      
           

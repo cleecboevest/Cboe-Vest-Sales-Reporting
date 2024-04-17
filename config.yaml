@@ -4,10 +4,6 @@ credentials:
       email: ksood@vestfin.com
       name: Karan Sood
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
-    spaloka@vestfin.com:
-      email: spaloka@vestfin.com
-      name: Sofia Paloka
-      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
     cmortimer@vestfin.com:
       email: cmortimer@vestfin.com
       name: Christopher Mortimer
@@ -44,6 +40,10 @@ credentials:
       email: amoussa@vestfin.com
       name: Andrew Moussa
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    cvona@vestfin.com:
+      email: cvona@vestfin.com
+      name: Cam Vona
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
 cookie:
   expiry_days: 30
   key: _vest_abcdef
@@ -56,5 +56,6 @@ preauthorized:
   - lpoggi@vestfin.com
   - dsullivan@vestfin.com
   - amoussa@vestfin.com
+  - cvona@vestfin.com
   - ksullivan@vestfin.com
   - clee@vestfin.com
