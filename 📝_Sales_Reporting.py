@@ -125,7 +125,7 @@ if authentication_status == True:
      selected_prev_date_uit_master = df_uit_master_merged[df_uit_master_merged['Date'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
 
      # Create tabs that will be based on each wholesaler
-     firm, capizzi, klein, mortimer, poggi, sullivan, unknown = st.tabs(['Firm', 'Capizzi', 'Klein', 'Mortimer', 'Poggi', 'Sullivan','Unknown'])
+     firm, capizzi, open_west, mortimer, poggi, sullivan, unknown = st.tabs(['Firm', 'Capizzi', 'Open West', 'Mortimer', 'Poggi', 'Sullivan','Unknown'])
      
      # Calculate Total Firm AUM
      selected_date_mf_AUM = selected_date_mf_master['AUM'].sum()
@@ -262,15 +262,15 @@ if authentication_status == True:
                width='100%')
 
      # Klein Tab     
-     with klein:
+     with open_west:
           # Create the headers
-          st.header("Klein Summary")
+          st.header("Open West Summary")
           col1, col2 = st.columns(2)
           
           # Filtered Wholesaler to calculate the AUM
-          selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Vest Wholesaler'].str.contains('Klein', na=False)]
-          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest Wholesaler'].str.contains('Klein', na=False)]
-          selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Vest Wholesaler'].str.contains('Klein', na=False)]
+          selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Vest Wholesaler'].str.contains('Open West', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest Wholesaler'].str.contains('Open West', na=False)]
+          selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Vest Wholesaler'].str.contains('Open West', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
           change_in_AUM = selected_date_AUM - selected_prev_date_AUM
