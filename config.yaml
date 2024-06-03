@@ -44,6 +44,14 @@ credentials:
       email: cvona@vestfin.com
       name: Cam Vona
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    sorgan@vestfin.com:
+      email: sorgan@vestfin.com
+      name: Spencer Organ
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    atorok@vestfin.com:
+      email: atorok@vestfin.com
+      name: Andrew Torok
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
 cookie:
   expiry_days: 30
   key: _vest_abcdef
@@ -59,3 +67,5 @@ preauthorized:
   - cvona@vestfin.com
   - ksullivan@vestfin.com
   - clee@vestfin.com
+  - sorgan@vestfin.com
+  - atorok@vestfin.com
