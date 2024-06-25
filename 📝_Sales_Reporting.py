@@ -125,7 +125,7 @@ if authentication_status == True:
      selected_prev_date_uit_master = df_uit_master_merged[df_uit_master_merged['Date'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
 
      # Create tabs that will be based on each wholesaler
-     firm, capizzi, open_west, mortimer, poggi, sullivan, unknown = st.tabs(['Firm', 'Capizzi', 'Open West', 'Mortimer', 'Poggi', 'Sullivan','Unknown'])
+     firm, capizzi, torok, mortimer, poggi, sullivan, unknown = st.tabs(['Firm', 'Capizzi', 'Open West', 'Mortimer', 'Poggi', 'Sullivan','Unknown'])
      
      # Calculate Total Firm AUM
      selected_date_mf_AUM = selected_date_mf_master['AUM'].sum()
@@ -261,16 +261,16 @@ if authentication_status == True:
                                                        'NNA']].sort_values(by=['NNA'], ascending=True).head(10),
                width='100%')
 
-     # Klein Tab     
-     with open_west:
+     # Torok Tab     
+     with torok:
           # Create the headers
-          st.header("Open West Summary")
+          st.header("Torok Summary")
           col1, col2 = st.columns(2)
           
           # Filtered Wholesaler to calculate the AUM
-          selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Vest Wholesaler'].str.contains('Open West', na=False)]
-          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest Wholesaler'].str.contains('Open West', na=False)]
-          selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Vest Wholesaler'].str.contains('Open West', na=False)]
+          selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Vest Wholesaler'].str.contains('Torok', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest Wholesaler'].str.contains('Torok', na=False)]
+          selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Vest Wholesaler'].str.contains('Torok', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
           change_in_AUM = selected_date_AUM - selected_prev_date_AUM
@@ -293,7 +293,7 @@ if authentication_status == True:
           AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
                                                        'City', 'State/Region', 'Postal Code', 'Client Defined Category Name', 'AUM', 
                                                        'NNA']].sort_values(by=['AUM'], ascending=False).head(20),
-               width='100%',key='klein20')
+               width='100%',key='torok20')
           
           st.subheader('Top 10 Inflows')
           AgGrid(df_mf_cohort_master_by_wholesaler[['Intermediary Firm Name', 'Initiating Firm Name', 'Address Line 1', 'Address Line 2',
