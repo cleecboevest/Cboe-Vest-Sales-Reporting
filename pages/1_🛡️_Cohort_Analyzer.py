@@ -10,6 +10,8 @@ import yaml
 from yaml import SafeLoader
 import streamlit_authenticator as stauth
 import io
+from streamlit_dynamic_filters import DynamicFilters
+
 
 
 def format_dollar_amount(amount):
@@ -76,7 +78,7 @@ def load_data():
 def process_dataframe(df_mf_master, df_territory_master):
      
      # Define the column headers to display
-     column_headers = ['Client Defined Category Name','Institutional Outsider','ETF Outsider','SP Outsider','COM Outsider','Vest Wholesaler','Intermediary Firm Name', 'Initiating Firm Name','Address Line 1', 'Address Line 2', 'City','Postal Code','State/Region','Channel','AUM','Industry AUM','NNA','Industry NNA']
+     column_headers = ['Client Defined Category Name','IS Outsider','ETF/SMA Outsider','SP Outsider','COM Outsider','Vest','Intermediary Firm Name', 'Initiating Firm Name','Address Line 1', 'Address Line 2', 'City','Postal Code','State/Region','Channel','AUM','Industry AUM','NNA','Industry NNA']
      date_options = df_mf_master['Month/Year (Asset Date)'].dt.strftime('%Y-%m-%d').unique().tolist()
      
      # Select the most recent date in the file and only display results from the most recent period
@@ -117,6 +119,16 @@ def filter_dataframe(df):
      modification_container = st.container()
 
      with modification_container:
+          
+          dynamic_filters = DynamicFilters(df, filters=['Cohort', 'IS Outsider','ETF/SMA Outsider', 'SP Outsider', 'COM Outsider', 'Vest', 'Channel'])
+          
+          with st.sidebar:
+               st.write("Apply filters in any order below 👇")
+               
+          dynamic_filters.display_filters(location='sidebar')
+          dynamic_filters.display_df()
+          
+          '''
           to_filter_columns = st.multiselect("Filter dataframe on", 
                                              ['Cohort', 'Institutional Outsider','ETF Outsider', 'SP Outsider', 'COM Outsider', 'Vest Wholesaler', 'Channel'])
           for column in to_filter_columns:
@@ -171,6 +183,7 @@ def filter_dataframe(df):
                     )
                     if user_text_input:
                          df = df[df[column].str.contains(user_text_input)]
+          '''
                          
           # Save the DF as a state for future downloading
           st.session_state.df_to_download = df2
@@ -186,7 +199,8 @@ def filter_dataframe(df):
      # Apply dollar formatting to the AUM and NNA columns for Advisor + Industry
      df2 = format_headers(df2)
           
-     return df2 if len(to_filter_columns) > 0 else df2.head(100)
+     #return df2 if len(to_filter_columns) > 0 else df2.head(100)
+     return df2
 
 #---------- SETTINGS ----------
 page_title = "Mutual Fund Analyzer"
@@ -231,19 +245,25 @@ if authentication_status == True:
      df_mf_master, df_territory_master = load_data()
      #df = process_dataframe(df_vest_wholesalers, df_mf_master, df_ft_wholesalers)
      df = process_dataframe(df_mf_master, df_territory_master)
+     df.fillna({'Client Defined Category Name':'None', 'IS Outsider':'None', 'ETF/SMA Outsider':'None', 'SP Outsider':'None', 'COM Outsider':'None', 'Vest':'None'}, inplace=True)
      
      # Build and filter the dataframe
-     updated_df = filter_dataframe(df)
+     #updated_df = filter_dataframe(df)
+     dynamic_filters = DynamicFilters(df, filters=['Client Defined Category Name','IS Outsider','ETF/SMA Outsider','SP Outsider','COM Outsider','Vest','Channel'])
+          
+     st.write("Apply filters in any order below 👇")
+               
+     dynamic_filters.display_filters(location='columns', num_columns=2, gap='small')
+     dynamic_filters.display_df(use_container_width=True)
      
      # Configure the AG-Grid options to better display the data
-     gb = GridOptionsBuilder.from_dataframe(updated_df)
+     #gb = GridOptionsBuilder.from_dataframe(updated_df)
      #gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=100)
-     gridOptions = gb.build()
+     #gridOptions = gb.build()
      
-          
-     output = AgGrid(
-          updated_df,
-          gridOptions=gridOptions,
-          columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
-          theme=AgGridTheme.ALPINE,
-          )
+     #output = AgGrid(
+     #     updated_df,
+     #     gridOptions=gridOptions,
+     #     columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW,
+     #     theme=AgGridTheme.ALPINE,
+     #     )
