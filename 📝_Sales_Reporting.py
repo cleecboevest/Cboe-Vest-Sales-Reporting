@@ -125,7 +125,7 @@ if authentication_status == True:
      selected_prev_date_uit_master = df_uit_master_merged[df_uit_master_merged['Date'] == (pd.to_datetime(date_select + "-01",format='%m-%Y-%d') - pd.DateOffset(months=1))]
 
      # Create tabs that will be based on each wholesaler
-     firm, capizzi, torok, mortimer, poggi, sullivan, unknown = st.tabs(['Firm', 'Capizzi', 'Open West', 'Mortimer', 'Poggi', 'Sullivan','Unknown'])
+     firm, capizzi, torok, mortimer, poggi, sullivan, unknown = st.tabs(['Firm', 'Capizzi', 'Torok', 'Mortimer', 'Poggi', 'Sullivan','Unknown'])
      
      # Calculate Total Firm AUM
      selected_date_mf_AUM = selected_date_mf_master['AUM'].sum()
@@ -223,7 +223,7 @@ if authentication_status == True:
           
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Vest Wholesaler'].str.contains('Capizzi', na=False)]
-          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest Wholesaler'].str.contains('Capizzi', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest'].str.contains('Capizzi', na=False)]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Vest Wholesaler'].str.contains('Capizzi', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
@@ -269,7 +269,7 @@ if authentication_status == True:
           
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Vest Wholesaler'].str.contains('Torok', na=False)]
-          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest Wholesaler'].str.contains('Torok', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest'].str.contains('Torok', na=False)]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Vest Wholesaler'].str.contains('Torok', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
@@ -316,7 +316,7 @@ if authentication_status == True:
           
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Vest Wholesaler'].str.contains('Morti', na=False)]
-          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest Wholesaler'].str.contains('Morti', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest'].str.contains('Morti', na=False)]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Vest Wholesaler'].str.contains('Morti', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
@@ -359,7 +359,7 @@ if authentication_status == True:
           
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Vest Wholesaler'].str.contains('Poggi', na=False)]
-          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest Wholesaler'].str.contains('Poggi', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest'].str.contains('Poggi', na=False)]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Vest Wholesaler'].str.contains('Poggi', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
@@ -402,7 +402,7 @@ if authentication_status == True:
           
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Vest Wholesaler'].str.contains('Sullivan', na=False)]
-          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest Wholesaler'].str.contains('Sullivan', na=False)]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest'].str.contains('Sullivan', na=False)]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Vest Wholesaler'].str.contains('Sullivan', na=False)]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
@@ -445,7 +445,7 @@ if authentication_status == True:
           
           # Filtered Wholesaler to calculate the AUM
           selected_date_df3_master_by_wholesaler = selected_date_mf_master[selected_date_mf_master['Vest Wholesaler'].isnull()]
-          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest Wholesaler'].isnull()]
+          df_mf_cohort_master_by_wholesaler = df_mf_cohort_master[df_mf_cohort_master['Vest'].isnull()]
           selected_prev_date_df3_master_by_wholesaler = selected_prev_date_mf_master[selected_prev_date_mf_master['Vest Wholesaler'].isnull()]
           selected_date_AUM = selected_date_df3_master_by_wholesaler['AUM'].sum()
           selected_prev_date_AUM = selected_prev_date_df3_master_by_wholesaler['AUM'].sum()
