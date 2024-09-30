@@ -56,6 +56,10 @@ credentials:
       email: wchien@vestfin.com
       name: Wei Chien
       password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
+    cmccrea@vestfin.com:
+      email: cmccrea@vestfin.com
+      name: Chris McCrea
+      password: $2b$12$y4xrkSbI/rM0N0WvGRemo.R7gRXYlcgIpz40xKtAiCLSQY8UZrqA2 # To be replaced with hashed password
 cookie:
   expiry_days: 30
   key: _vest_abcdef
@@ -74,3 +78,4 @@ preauthorized:
   - sorgan@vestfin.com
   - atorok@vestfin.com
   - wchien@vestfin.com
+  - cmccrea@vestfin.com
