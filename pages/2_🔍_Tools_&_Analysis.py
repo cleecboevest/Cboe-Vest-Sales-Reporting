@@ -79,22 +79,22 @@ authenticator = stauth.Authenticate(
      config['cookie']['expiry_days']
 )
 
-name, authentication_status, username = authenticator.login("Login", "main")
-
-if 'authentication_status' not in st.session_state:
-     st.session_state['authentication_status'] = authentication_status
-     
-if authentication_status == False:
+try:   
+     authenticator.login()
+except Exception as e:
      st.error("Username or password is incorrect.")
+     st.stop()
      
-if authentication_status == None:
-     st.warning("Please enter your username and password.")
+if st.session_state['authentication_status']:
+    authenticator.logout('Logout', 'sidebar')
+    st.sidebar.title(f'Welcome *{st.session_state["name"]}*')
+elif st.session_state['authentication_status'] is False:
+    st.error('Username/password is incorrect')
+elif st.session_state['authentication_status'] is None:
+    st.warning('Please enter your username and password')
 
 # If authenticated, then start the app     
-if authentication_status == True:
-    # Render logout button
-     authenticator.logout("Logout", "sidebar")
-     st.sidebar.title(f"Welcome {name}!")
+if st.session_state['authentication_status']:
      
      #----------STATUS MESSAGE------
      with st.spinner('Loading All Sales Data. This May Take A Minute. Please wait...'):
