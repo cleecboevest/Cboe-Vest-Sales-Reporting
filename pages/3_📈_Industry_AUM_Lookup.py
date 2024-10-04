@@ -18,6 +18,8 @@ def load_data(url):
     df = pd.read_excel(url, engine='openpyxl', skiprows=0, usecols=[
         'Initiating Firm Name',
         'Client Defined Category Name',
+        'ETF/SMA Outsider',
+        'Channel',
         'AUM',
         'Industry AUM',
         'NNA',
@@ -64,13 +66,23 @@ if st.session_state['authentication_status']:
     This page extracts Industry AUM from the Cohort Analyzer output. 
     """)
     st.write("""
-    !! This page takes about 30 seconds to load the first time. !!
+    !! This page takes about 30 seconds to load the first time !!
     """)
 
     # Load data
     url = st.secrets["mf_analyzer_url"]
     df = load_data(url)
-    
+    # Create a unique list of all ETF/SMA Outsider from df
+    etf_sma_outsiders = df['ETF/SMA Outsider'].dropna().unique().tolist()
+    etf_sma_outsiders.sort()
+
+    # Get user input for "ETF/SMA Outside" using a dropdown box with search functionality
+    etf_outsider = st.selectbox(
+        "Select ETF/SMA Outsider",
+        options=etf_sma_outsiders,
+        index=None,
+        placeholder="Choose an ETF/SMA Outsider...",
+    )
     # Get user input for firm names
     firm_names = st.text_area("Enter firm names (separated by new lines)")
 
@@ -86,7 +98,9 @@ if st.session_state['authentication_status']:
             firm_order = {name.lower(): index for index, name in enumerate(firm_names)}
             
             # Filter and process the dataframe
-            filtered_df = df[df['Initiating Firm Name'].str.lower().isin([name.lower() for name in firm_names])]
+            filtered_df = df[(df['Initiating Firm Name'].str.lower().isin([name.lower() for name in firm_names])) & 
+                             (df['ETF/SMA Outsider'] == etf_outsider) &
+                             (df['Channel'] == 'RIA')]
             category_mapping = {
                 'BUIGX': 'Hedged Equity',
                 'KNGIX': 'Covered Call',
@@ -158,7 +172,9 @@ if st.session_state['authentication_status']:
 
     if selected_firm:
         # Filter the dataframe for the selected firm
-        firm_df = df[df['Initiating Firm Name'] == selected_firm]
+        firm_df = df[(df['Initiating Firm Name'] == selected_firm) & 
+                     (df['ETF/SMA Outsider'] == etf_outsider) & 
+                     (df['Channel'] == 'RIA')]
         
         # Apply category mapping
         category_mapping = {
