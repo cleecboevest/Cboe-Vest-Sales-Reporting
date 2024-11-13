@@ -92,7 +92,7 @@ def process_dataframe(df_mf_master, df_territory_master):
      
      #df_master_merged = df_mf_master.merge(df_territory_master, left_on=['Postal Code'], right_on=['Zip'], how='left', suffixes=(None,'_right'))
      # The master Dataframe is now complete. We can now start filtering on the data
-     df_mf_master = df_mf_master.replace({'Client Defined Category Name':{'BUIGX':'Buffer10/Hedged Equity','KNGIX':'Covered Call','ENGIX':'Buffer20/Innovator','RYSE':'IR Hedge','BTCVX':'Crypto', 'FTMIX':'FTMIX/Multi-Asset'}})     
+     df_mf_master = df_mf_master.replace({'Client Defined Category Name':{'BUIGX':'Buffer10/Hedged Equity','KNGIX':'Covered Call','ENGIX':'Buffer20/Innovator','RYSE':'IR Hedge','BTCVX':'Crypto', 'FTMIX':'FTMIX/Multi-Strat'}})     
      df_mf_master = df_mf_master[column_headers]
      
      return df_mf_master
